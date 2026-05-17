@@ -92,7 +92,7 @@
     .bar-lbl{font-family:'Cormorant Garamond',serif;font-size:10px;width:13px;color:var(--muted);text-align:right;flex-shrink:0}
     .bar-track{flex:1;height:3px;background:var(--line);border-radius:999px;overflow:hidden}
     .bar-fill{height:100%;border-radius:999px;transition:width .5s}
-    /* Form disabled in no-data version */
+    /* Form */
     #screen-form{display:none!important;padding:34px 0 60px}
     .form-hd{text-align:center;margin-bottom:38px}
     .form-ey{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:10px}
@@ -338,7 +338,7 @@ body::before{display:none;}
       <div class="r-block full">
         <span class="r-lbl">Result Summary · 結果摘要</span>
         <div class="summary-box" id="summaryBox"></div>
-        <div class="r-acts"><button class="btn-copy" id="copyBtn">複製結果</button><button class="btn-card" id="downloadCardBtn">下載圖鑑卡</button><button class="btn-print" id="printBtn">列印結果</button><button class="btn-reset" id="resetBtn">重新尋找赫洛里</button></div>
+        <div class="r-acts"><button class="btn-copy" id="copyBtn">複製結果</button><button class="btn-card" id="downloadCardBtn">下載圖鑑卡</button><button class="btn-print" id="printBtn">列印</button><button class="btn-reset" id="resetBtn">重新尋找赫洛里</button></div>
         <div class="submit-notice" id="submitNotice">本測驗不收集個人資料。若想保留結果，請透過 LINE 主動傳送。</div>
       </div>
     </div>
@@ -480,41 +480,27 @@ function topKeys(sc){const mx=Math.max(...Object.values(sc));return Object.keys(
 function primaryKey(sc){const mx=Math.max(...Object.values(sc));return ORDER.find(k=>sc[k]===mx)||ORDER[0];}
 function combinedProfile(keys){return profiles[(keys&&keys[0])||ORDER[0]];}
 function buildSummary(p){
-  return '【Keylume · Find Your Helori｜探索摘要】
-'
-    +'本測驗未收集個人資料。
-'
-    +'氣味起源：'+p.profile.type+'
-'
-    +'英文設定：'+p.profile.english+'
-'
-    +'Atlas No.：'+p.profile.atlasNo+'
-'
-    +'Origin：'+p.profile.origin+'
-'
-    +'Instrument：'+p.profile.instrument+'
-'
-    +'Scent Direction：'+p.profile.scentShort+'
-'
-    +'Taste：'+p.profile.taste+'
-'
+  return '【Keylume · Find Your Helori｜探索摘要】\n'
+    +'本測驗未收集個人資料。\n'
+    +'氣味起源：'+p.profile.type+'\n'
+    +'英文設定：'+p.profile.english+'\n'
+    +'Atlas No.：'+p.profile.atlasNo+'\n'
+    +'Origin：'+p.profile.origin+'\n'
+    +'Instrument：'+p.profile.instrument+'\n'
+    +'Scent Direction：'+p.profile.scentShort+'\n'
+    +'Taste：'+p.profile.taste+'\n'
     +'分數統計：A='+p.scores.A+' / B='+p.scores.B+' / C='+p.scores.C+' / D='+p.scores.D+' / E='+p.scores.E+' / F='+p.scores.F+' / G='+p.scores.G;
 }
-
-const vbn=n=>{const e=document.querySelector('input[name="'+n+'"]:checked');return e?e.value:'';};
-const vbns=n=>Array.from(document.querySelectorAll('input[name="'+n+'"]:checked')).map(e=>e.value);
-
 
 const LINE_OA_ID='@hscent';
 function lineUrl(message){
   return 'https://line.me/R/oaMessage/'+encodeURIComponent(LINE_OA_ID)+'/?'+encodeURIComponent(message.trim());
 }
-function setLineButtons(profile, actualKey){
-  const resultName=profile.type;
-  const base='我的 Helori 是：'+resultName+'\nOrigin：'+profile.origin+'\n香氣方向：'+profile.scentShort+'\n\n';
-  const getMsg='我想索取我的 Helori 結果\n\n'+base+'請提供我的 Helori 結果與後續說明。';
-  const bookMsg='我想預約 Helori / 香氣課程\n\n'+base+'請協助我了解可預約的課程時間。';
-  const notifyMsg='開課請通知我\n\n'+base+'之後有 Helori 或香氣課程開課時，請通知我。';
+function setLineButtons(profile){
+  const base='我的 Helori 是：'+profile.type+'\\nOrigin：'+profile.origin+'\\n香氣方向：'+profile.scentShort+'\\n\\n';
+  const getMsg='我想索取我的 Helori 結果\\n\\n'+base+'請提供我的 Helori 結果與後續說明。';
+  const bookMsg='我想預約 Helori / 香氣課程\\n\\n'+base+'請協助我了解可預約的課程時間。';
+  const notifyMsg='開課請通知我\\n\\n'+base+'之後有 Helori 或香氣課程開課時，請通知我。';
   const getBtn=document.getElementById('lineGetBtn');
   const bookBtn=document.getElementById('lineBookBtn');
   const notifyBtn=document.getElementById('lineNotifyBtn');
@@ -560,7 +546,7 @@ function submitQuiz(){
   $('#summaryBox').textContent=buildSummary(payload);
   const notice=document.getElementById('submitNotice');
   if(notice)notice.textContent='本測驗不收集個人資料。若想讓 Hana 老師知道結果，請點擊 LINE 按鈕並自行送出訊息。';
-  setLineButtons(profile, actualKey);
+  setLineButtons(profile);
   show('result');
 }
 
@@ -634,6 +620,9 @@ $('#resetBtn').addEventListener('click',()=>{stopCycle();answers=new Array(10).f
 
 function buildParticles(){const ct=$('#particles'),shapes=['<svg width="10" height="14" viewBox="0 0 10 14"><ellipse cx="5" cy="7" rx="3.5" ry="5.5" fill="none" stroke="#b8883c" stroke-width="1" transform="rotate(-18,5,7)"/></svg>','<svg width="10" height="10" viewBox="0 0 10 10"><rect x="1" y="1" width="8" height="8" fill="none" stroke="#b8883c" stroke-width="1" transform="rotate(45,5,5)"/></svg>','<svg width="14" height="5" viewBox="0 0 14 5"><path d="M0,2.5 Q3.5,0 7,2.5 Q10.5,5 14,2.5" fill="none" stroke="#b8883c" stroke-width="1"/></svg>','<svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="none" stroke="#b8883c" stroke-width="1"/></svg>'];for(let i=0;i<16;i++){const p=document.createElement('div');p.className='pt';p.innerHTML=shapes[i%4];p.style.left=(Math.random()*100)+'vw';p.style.animationDuration=(20+Math.random()*18)+'s';p.style.animationDelay=(Math.random()*22)+'s';p.style.transform='scale('+(0.5+Math.random()*0.7)+')';ct.appendChild(p);}}
 
+window.startQuiz=startQuiz;
+const startButton=document.querySelector('.btn-start');
+if(startButton){startButton.addEventListener('click',startQuiz);}
 buildLanding();buildParticles();show('landing');
 
 </script>
