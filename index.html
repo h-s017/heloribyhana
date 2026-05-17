@@ -268,43 +268,6 @@ body::before{display:none;}
       <div id="qarea"></div>
     </div>
   </div>
-  <div id="screen-form">
-    <div class="form-hd"><span class="form-ey">Part II · Helori Record</span><span class="form-t">初見｜關於你，Helori 也想認識</span><p class="form-sub">將與 Helori 配對結果傳送到 Hana 老師的課程記憶中，進行後續教學。</p></div>
-    <div class="form-card">
-      <div class="field"><label class="f-lbl" for="sName">名字｜Name <span class="req">*</span></label><input id="sName" type="text" placeholder="喜歡別人怎麼稱呼你" required/></div>
-      <div class="field"><label class="f-lbl">性別｜Gender</label><div class="ogrid">
-        <label class="olabel"><input type="radio" name="gender" value="女｜Female"/>女｜Female</label>
-        <label class="olabel"><input type="radio" name="gender" value="男｜Male"/>男｜Male</label>
-        <label class="olabel"><input type="radio" name="gender" value="不透露｜Prefer not to say"/>不透露</label>
-        <label class="olabel"><input type="radio" name="gender" value="其他｜Other"/>其他</label>
-      </div></div>
-      <div class="field"><label class="f-lbl">目前上過哪些調香課？</label><span class="f-hint">可複選。</span><div class="ogrid">
-        <label class="olabel"><input type="checkbox" name="courses" value="沒有上過，第一次接觸"/>沒有上過，第一次接觸</label>
-        <label class="olabel"><input type="checkbox" name="courses" value="香水體驗課"/>香水體驗課</label>
-        <label class="olabel"><input type="checkbox" name="courses" value="蠟燭／擴香／香氛噴霧課"/>蠟燭／擴香／香氛噴霧課</label>
-        <label class="olabel"><input type="checkbox" name="courses" value="調香師證書課程"/>調香師證書課程</label>
-        <label class="olabel"><input type="checkbox" name="courses" value="天然精油／芳療課程"/>天然精油／芳療</label>
-        <label class="olabel"><input type="checkbox" name="courses" value="品牌自創課程"/>品牌自創課程</label>
-      </div><div style="margin-top:9px"><input id="coursesOther" type="text" placeholder="其他課程，可自行填寫"/></div></div>
-      <div class="field"><label class="f-lbl">今天來上課的目的</label><span class="f-hint">可複選。</span><div class="ogrid">
-        <label class="olabel"><input type="checkbox" name="purpose" value="興趣學習"/>興趣學習</label>
-        <label class="olabel"><input type="checkbox" name="purpose" value="想增加技能"/>想增加技能</label>
-        <label class="olabel"><input type="checkbox" name="purpose" value="未來想創業"/>未來想創業</label>
-        <label class="olabel"><input type="checkbox" name="purpose" value="已有品牌來進修"/>已有品牌來進修</label>
-        <label class="olabel"><input type="checkbox" name="purpose" value="喜歡香氣"/>喜歡香氣</label>
-        <label class="olabel"><input type="checkbox" name="purpose" value="對課綱有興趣"/>對課綱有興趣</label>
-      </div></div>
-      <div class="field"><label class="f-lbl" for="favP">喜歡的香水名稱或品牌</label><input id="favP" type="text" placeholder="例如：Chanel Chance、Jo Malone 鼠尾草與海鹽"/></div>
-      <div class="field"><label class="f-lbl">偏好的氣味類型｜前三名</label><span class="f-hint">不影響測驗結果，可留空。</span><div class="rank-grid">
-        <div class="rank-box"><label for="r1">第一偏好</label><select id="r1"><option value="">請選擇</option><option>柑橘／清新</option><option>花香</option><option>果香</option><option>木質</option><option>茶感／綠意</option><option>琥珀／東方</option><option>美食／甜感</option><option>西普／馥奇／苔蘚</option></select></div>
-        <div class="rank-box"><label for="r2">第二偏好</label><select id="r2"><option value="">請選擇</option><option>柑橘／清新</option><option>花香</option><option>果香</option><option>木質</option><option>茶感／綠意</option><option>琥珀／東方</option><option>美食／甜感</option><option>西普／馥奇／苔蘚</option></select></div>
-        <div class="rank-box"><label for="r3">第三偏好</label><select id="r3"><option value="">請選擇</option><option>柑橘／清新</option><option>花香</option><option>果香</option><option>木質</option><option>茶感／綠意</option><option>琥珀／東方</option><option>美食／甜感</option><option>西普／馥奇／苔蘚</option></select></div>
-      </div></div>
-      <div class="field"><label class="f-lbl" for="studyMore">還有什麼想進修？</label><textarea id="studyMore" placeholder="例如：香水調香、品牌香氛設計、證照課程、創業、配方修正等"></textarea></div>
-      <div class="field"><div class="consent-wrap"><label><input id="consent" type="checkbox" required/><span>填寫本測驗即同意 Hana 老師將資料用於課程解析、學習紀錄與後續課程建議，不會公開個人資料。</span></label></div></div>
-      <div class="form-acts"><button class="btn-submit" onclick="submitQuiz()">查看我的赫洛里 →</button><button class="btn-back" onclick="backToQuiz()">← 回到探索</button></div>
-    </div>
-  </div>
   <div id="screen-result">
     <span class="res-ey">Keylume · Helori Origin Atlas · Your Origin</span>
     <div class="res-hero"><div class="res-char">
@@ -422,7 +385,7 @@ function stopCycle(){if(cycleTimer){clearInterval(cycleTimer);cycleTimer=null;}}
 let curQ=0,answers=new Array(10).fill(null),scores={A:0,B:0,C:0,D:0,E:0,F:0,G:0};
 const $=s=>document.querySelector(s),$$=s=>Array.from(document.querySelectorAll(s));
 function toast(m){const e=$('#toast');e.textContent=m;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2000);}
-function show(id){['landing','quiz','form','result'].forEach(s=>document.getElementById('screen-'+s).style.display=s===id?'block':'none');window.scrollTo({top:0,behavior:'smooth'});}
+function show(id){['landing','quiz','result'].forEach(s=>document.getElementById('screen-'+s).style.display=s===id?'block':'none');window.scrollTo({top:0,behavior:'smooth'});}
 
 function buildLanding(){
   const ct=$('#constellation');
@@ -470,8 +433,6 @@ function pick(el,idx){
 }
 function nav(d){const n=curQ+d;if(n<0||n>9)return;curQ=n;renderProg();renderQ(curQ,true);}
 function goForm(){if(answers.some(a=>!a)){const mi=answers.findIndex(a=>!a);toast('第 '+(mi+1)+' 題還沒選');curQ=mi;renderProg();renderQ(curQ,true);return;}submitQuiz();}
-function backToQuiz(){show('quiz');renderProg();renderQ(curQ,false);}
-
 let lastCpKey=null;
 function leadKey(){const mx=Math.max(...Object.values(scores));if(mx===0)return null;return Object.keys(scores).filter(k=>scores[k]===mx)[0];}
 function updateCP(){return;}
