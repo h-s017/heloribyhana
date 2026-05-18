@@ -1,591 +1,145 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Find Your Helori｜LINE 索取版</title>
-<!-- Student download cards updated: uses seven provided atlas PNG files. -->
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Noto+Serif+TC:wght@300;400;500&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Find Your Helori｜找到專屬你的 Helori</title>
+  <meta name="description" content="Find Your Helori｜找到專屬你的 Helori。Hana's Scent Artist 的 Helori 氣味角色測驗。" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Noto+Serif+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <style>
-    :root{--bg:#f7f6f3;--paper:#fff;--ink:#1a1916;--soft:#4a4743;--muted:#9a9590;--gold:#b8883c;--gold-lt:#dfc98a;--gold-pale:#f5edd8;--line:#e2ddd6;--line-d:#ccc6bc;--sh:0 20px 60px rgba(20,18,15,.09);--sh-s:0 4px 18px rgba(20,18,15,.07);--r:22px}
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
-    body{font-family:'Noto Serif TC','PingFang TC',serif;background:var(--bg);color:var(--ink);line-height:1.82;min-height:100vh;overflow-x:hidden}
-    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 71px,rgba(0,0,0,.013) 71px,rgba(0,0,0,.013) 72px)}
-    .particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
-    .pt{position:absolute;opacity:0;animation:drift linear infinite}
-    .pt svg{opacity:.2}
-    @keyframes drift{0%{transform:translateY(110vh) rotate(0deg);opacity:0}6%{opacity:1}94%{opacity:.6}100%{transform:translateY(-20vh) rotate(400deg);opacity:0}}
-    .shell{position:relative;z-index:1;width:min(1020px,94vw);margin:0 auto}
-    .brand-bar{display:flex;justify-content:space-between;align-items:center;padding:22px 0 16px;border-bottom:1px solid var(--line);font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
-    .brand-mark{color:var(--ink);font-weight:600;font-size:13px}
-    /* Character image: full sheet 2x2 grid, show front quadrant via overflow:hidden + img position */
-    .char-frame{position:relative;overflow:hidden;width:100%;aspect-ratio:4/5;background:var(--gold-pale)}
-    .char-frame img{position:absolute;top:0;left:0;width:200%;height:auto;display:block;transition:top .05s,left .05s,opacity .4s}
-    /* Landing */
-    #screen-landing{min-height:88vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 0 60px}
-    .ld-eye{font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
-    .ld-title{font-family:'Cormorant Garamond',serif;font-size:clamp(42px,8vw,84px);font-weight:300;line-height:1.1;color:var(--ink);letter-spacing:.06em;margin-bottom:6px}
-    .ld-title em{font-style:italic;color:var(--gold)}
-    .ld-en{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(14px,2vw,18px);color:var(--muted);letter-spacing:.12em;margin-bottom:22px}
-    .ld-sub{width:min(520px,90%);color:var(--soft);font-size:14.5px;font-weight:300;line-height:1.9;margin:0 auto 44px}
-    .constellation{display:grid;grid-template-columns:repeat(7,1fr);gap:14px;width:min(700px,92vw);margin:0 auto 40px}
-    .c-cell{display:flex;flex-direction:column;align-items:center;gap:8px;animation:floatChar ease-in-out infinite;cursor:default;transition:transform .3s}
-    .c-cell:hover{transform:translateY(-8px) scale(1.05) !important}
-    .c-cell .char-frame{border-radius:14px;border:1.5px solid var(--line-d);box-shadow:var(--sh-s);transition:box-shadow .3s,border-color .3s}
-    .c-cell:hover .char-frame{box-shadow:0 10px 32px rgba(184,136,60,.28);border-color:var(--gold-lt)}
-    .c-name{font-family:'Cormorant Garamond',serif;font-size:10.5px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
-    @keyframes floatChar{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
-    .ld-pills{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:36px}
-    .pill{font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:.14em;border:1px solid var(--line-d);border-radius:999px;padding:7px 16px;color:var(--soft);background:var(--paper)}
-    .btn-start{font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:.22em;text-transform:uppercase;background:var(--ink);color:#fff;border:0;border-radius:999px;padding:16px 46px;cursor:pointer;transition:all .22s}
-    .btn-start:hover{background:#2c2a25;transform:translateY(-2px)}
-    /* Quiz */
-    #screen-quiz{display:none;padding:34px 0 60px}
-    .qprog{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:34px}
-    .ptrack{display:flex;align-items:center;flex:1}
-    .pdot{width:27px;height:27px;border-radius:50%;border:1.5px solid var(--line-d);background:var(--paper);display:grid;place-items:center;font-family:'Cormorant Garamond',serif;font-size:11px;color:var(--muted);transition:all .3s;flex-shrink:0}
-    .pdot.done{background:var(--ink);border-color:var(--ink);color:#fff}
-    .pdot.now{background:var(--gold);border-color:var(--gold);color:#fff;box-shadow:0 0 0 4px rgba(184,136,60,.18)}
-    .pline{flex:1;height:1px;background:var(--line);min-width:3px}
-    .pline.done{background:var(--ink)}
-    .plabel{font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
-    .qwrap{display:grid;grid-template-columns:1fr 264px;gap:26px;align-items:start}
-    .qcard{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:38px;box-shadow:var(--sh);animation:slideIn .42s cubic-bezier(.22,1,.36,1) both}
-    @keyframes slideIn{from{opacity:0;transform:translateX(26px)}to{opacity:1;transform:none}}
-    @keyframes slideOut{to{opacity:0;transform:translateX(-26px)}}
-    .qcard.leaving{animation:slideOut .28s ease forwards}
-    .q-eye{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:18px;display:block}
-    .q-num{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:300;line-height:1;color:var(--line-d);margin-bottom:-4px;display:block;user-select:none}
-    .q-zh{font-size:18px;font-weight:400;line-height:1.65;color:var(--ink);margin-bottom:5px}
-    .q-en{font-family:'Cormorant Garamond',serif;font-size:13.5px;font-style:italic;color:var(--muted);display:block;margin-bottom:26px}
-    .opts{display:flex;flex-direction:column;gap:9px}
-    .opt{display:flex;align-items:flex-start;gap:14px;padding:15px 18px;border:1.5px solid var(--line);border-radius:15px;background:var(--paper);cursor:pointer;transition:all .19s;position:relative;overflow:hidden}
-    .opt::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--gold-pale),transparent);opacity:0;transition:opacity .22s}
-    .opt:hover{border-color:var(--gold-lt);transform:translateY(-1px)}
-    .opt:hover::before{opacity:1}
-    .opt.sel{border-color:var(--gold);background:var(--gold-pale);box-shadow:0 0 0 3px rgba(184,136,60,.13)}
-    .opt.sel::before{opacity:0}
-    .opt input{position:absolute;opacity:0;pointer-events:none}
-    .opt-l{font-family:'Cormorant Garamond',serif;font-size:13px;font-weight:600;color:var(--gold);width:20px;flex-shrink:0;padding-top:2px}
-    .opt-t{font-size:13.5px;line-height:1.72;color:var(--soft)}
-    .opt-e{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--muted);font-size:11.5px;display:block;margin-top:2px}
-    .qnav{display:flex;justify-content:space-between;align-items:center;margin-top:26px}
-    .btn-n{font-family:'Cormorant Garamond',serif;font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;border:1.5px solid var(--line-d);border-radius:999px;padding:11px 22px;background:var(--paper);color:var(--soft);cursor:pointer;transition:all .19s}
-    .btn-n:hover{border-color:var(--ink);color:var(--ink);transform:translateY(-1px)}
-    .btn-n:disabled{opacity:.28;pointer-events:none}
-    .btn-n.pri{background:var(--ink);color:#fff;border-color:var(--ink)}
-    .btn-n.pri:hover{background:#2c2a25}
-    /* Companion */
-    .companion{position:sticky;top:28px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:22px 18px;box-shadow:var(--sh-s);text-align:center}
-    .cp-hint{font-family:'Cormorant Garamond',serif;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:14px}
-    .cp-frame{width:120px;aspect-ratio:4/5;margin:0 auto 14px;border-radius:14px;border:1.5px solid var(--line-d);overflow:hidden;position:relative;background:var(--gold-pale);transition:border-color .5s}
-    .cp-frame.active{border-color:var(--gold-lt)}
-    .cp-ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:26px;color:var(--muted);opacity:.4;transition:opacity .3s;z-index:1}
-    .cp-frame img{position:absolute;top:0;left:0;width:200%;height:auto;display:block;transition:opacity .4s,top .05s,left .05s}
-    .cp-name{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:400;color:var(--ink);display:block}
-    .cp-world{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:11.5px;color:var(--gold);letter-spacing:.06em;display:block;margin-top:3px}
-    .cp-tags{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-top:12px}
-    .cp-tag{font-size:10px;padding:3px 8px;border-radius:999px;border:1px solid var(--line-d);color:var(--soft);background:var(--bg)}
-    .cp-bars{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
-    .bar-row{display:flex;align-items:center;gap:6px;margin-bottom:5px}
-    .bar-lbl{font-family:'Cormorant Garamond',serif;font-size:10px;width:13px;color:var(--muted);text-align:right;flex-shrink:0}
-    .bar-track{flex:1;height:3px;background:var(--line);border-radius:999px;overflow:hidden}
-    .bar-fill{height:100%;border-radius:999px;transition:width .5s}
-    /* Form */
-    #screen-form{display:none!important;padding:34px 0 60px}
-    .form-hd{text-align:center;margin-bottom:38px}
-    .form-ey{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:10px}
-    .form-t{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,4vw,36px);font-weight:400;color:var(--ink);margin-bottom:10px;display:block}
-    .form-sub{color:var(--soft);font-size:14px;font-weight:300}
-    .form-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:36px;box-shadow:var(--sh)}
-    .field{margin-bottom:24px}
-    .f-lbl{display:block;font-size:14px;font-weight:500;margin-bottom:9px;color:var(--ink)}
-    .f-hint{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--muted);margin-bottom:9px;display:block}
-    .req{color:var(--gold)}
-    input[type=text],textarea{width:100%;border:1.5px solid var(--line);border-radius:13px;padding:13px 16px;background:var(--paper);color:var(--ink);font-family:inherit;font-size:15px;outline:none;transition:border-color .2s,box-shadow .2s}
-    textarea{min-height:106px;resize:vertical}
-    input[type=text]:focus,textarea:focus{border-color:var(--gold-lt);box-shadow:0 0 0 4px rgba(184,136,60,.11)}
-    .ogrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-    .olabel{display:flex;gap:10px;align-items:flex-start;padding:13px 14px;border:1.5px solid var(--line);border-radius:13px;background:var(--paper);cursor:pointer;transition:all .18s;font-size:13px;color:var(--soft)}
-    .olabel:hover{border-color:var(--gold-lt);background:var(--gold-pale)}
-    .olabel input{margin-top:3px;accent-color:var(--gold);flex-shrink:0}
-    .rank-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-    .rank-box{background:var(--paper);border:1.5px solid var(--line);border-radius:13px;padding:13px}
-    .rank-box label{display:block;font-size:12px;color:var(--muted);margin-bottom:9px}
-    .rank-box select{width:100%;border:1px solid var(--line-d);border-radius:10px;padding:10px 12px;background:var(--paper);color:var(--ink);font-family:inherit;font-size:14px;outline:none}
-    .rank-box select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,136,60,.1)}
-    .consent-wrap{background:var(--bg);border:1px solid var(--line);border-radius:13px;padding:15px}
-    .consent-wrap label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;font-size:13px;color:var(--soft);line-height:1.7}
-    .consent-wrap input{margin-top:4px;accent-color:var(--gold);flex-shrink:0}
-    .form-acts{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
-    .btn-submit{font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:.2em;text-transform:uppercase;background:var(--ink);color:#fff;border:0;border-radius:999px;padding:15px 40px;cursor:pointer;transition:all .2s}
-    .btn-submit:hover{background:#2c2a25;transform:translateY(-2px)}
-    .btn-back{font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;background:transparent;color:var(--soft);border:1.5px solid var(--line-d);border-radius:999px;padding:15px 28px;cursor:pointer;transition:all .2s}
-    .btn-back:hover{border-color:var(--ink);color:var(--ink)}
-    /* Result */
-    #screen-result{display:none;padding:34px 0 80px}
-    .res-ey{font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);display:block;text-align:center;margin-bottom:10px;animation:revUp .6s .1s both}
-    @keyframes revUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
-    .res-hero{background:linear-gradient(135deg,var(--paper) 0%,var(--gold-pale) 55%,var(--paper) 100%);border:1px solid var(--gold-lt);border-radius:var(--r);padding:38px;box-shadow:var(--sh);margin-bottom:20px;animation:revUp .65s .15s both}
-    .res-char{display:grid;grid-template-columns:280px 1fr;gap:36px;align-items:start}
-    .res-portrait{border-radius:18px;overflow:hidden;border:1px solid var(--gold-lt);box-shadow:0 18px 55px rgba(184,136,60,.2);position:relative;width:280px;aspect-ratio:4/5;animation:bloom .9s .3s cubic-bezier(.22,1,.36,1) both}
-    .res-portrait img{position:absolute;top:0;left:0;width:200%;height:auto;display:block;transition:top .05s,left .05s}
-    @keyframes bloom{from{opacity:0;transform:scale(.93)}to{opacity:1;transform:none}}
-    .atlas-badge{display:inline-block;font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;border:1px solid var(--gold-lt);border-radius:999px;padding:5px 14px;color:var(--gold);margin-bottom:12px;background:rgba(255,255,255,.7)}
-    .res-matched{font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;display:block}
-    .res-name{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,5vw,44px);font-weight:400;line-height:1.2;color:var(--ink);margin-bottom:5px}
-    .res-en{font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;color:var(--gold)}
-    .res-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
-    .meta-i{background:rgba(255,255,255,.78);border:1px solid var(--line);border-radius:13px;padding:11px 15px}
-    .meta-lbl{font-family:'Cormorant Garamond',serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:3px}
-    .meta-val{font-size:13px;color:var(--ink);line-height:1.5}
-    .tag-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:16px}
-    .tag{font-size:12px;padding:5px 12px;border-radius:999px;border:1px solid var(--line-d);background:var(--paper);color:var(--soft)}
-    .score-wrap{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:24px;margin-bottom:18px;animation:revUp .65s .2s both}
-    .score-lbl{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:16px}
-    .score-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
-    .sc{background:var(--bg);border:1px solid var(--line);border-radius:13px;text-align:center;padding:13px 4px}
-    .sc.top{border-color:var(--gold-lt);background:var(--gold-pale)}
-    .sc-k{font-family:'Cormorant Garamond',serif;font-size:10px;color:var(--muted);display:block}
-    .sc-ch{font-size:10px;color:var(--muted);display:block;margin-bottom:3px}
-    .sc-n{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--gold);display:block;line-height:1}
-    .r-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
-    .r-block{background:var(--paper);border:1px solid var(--line);border-radius:17px;padding:21px 23px;animation:revUp .65s .25s both}
-    .r-block.full{grid-column:1/-1}
-    .r-lbl{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:9px}
-    .r-txt{font-size:13.5px;color:var(--soft);line-height:1.9;white-space:pre-line}
-    .summary-box{white-space:pre-wrap;background:var(--bg);border:1px dashed var(--line-d);border-radius:13px;padding:16px;color:var(--soft);font-size:13px;max-height:300px;overflow:auto;line-height:1.82;font-family:'Cormorant Garamond',serif}
-    .r-acts{display:flex;flex-wrap:wrap;gap:9px;margin-top:15px}
-    .btn-copy,.btn-print,.btn-reset{font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;border-radius:999px;padding:11px 22px;cursor:pointer;transition:all .2s;border:1.5px solid var(--line-d)}
-    .btn-copy{background:var(--ink);color:#fff;border-color:var(--ink)}
-    .btn-copy:hover{background:#2c2a25}
-    .btn-print{background:var(--paper);color:var(--soft)}
-    .btn-print:hover{border-color:var(--ink)}
-    .btn-reset{background:transparent;color:var(--muted)}
-    .btn-reset:hover{color:var(--ink);border-color:var(--ink)}
-    .submit-notice{margin-top:13px;padding:11px 15px;border-left:3px solid var(--gold-lt);background:var(--gold-pale);border-radius:0 10px 10px 0;font-size:13px;color:var(--soft)}
-    .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(18px);background:var(--ink);color:#fff;padding:11px 22px;border-radius:999px;font-family:'Cormorant Garamond',serif;font-size:13.5px;letter-spacing:.06em;opacity:0;pointer-events:none;transition:all .24s;z-index:100}
-    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-    @media(max-width:780px){.qwrap{grid-template-columns:1fr}.companion{display:none}.res-char{grid-template-columns:1fr}.res-portrait{width:100%;max-width:280px;margin:0 auto}.score-grid{grid-template-columns:repeat(4,1fr)}.r-grid{grid-template-columns:1fr}.r-block.full{grid-column:auto}.ogrid{grid-template-columns:1fr}.rank-grid{grid-template-columns:1fr}.res-meta{grid-template-columns:1fr}.form-card,.res-hero{padding:22px 16px}.constellation{gap:8px}.c-name{display:none}}
-    @media print{#screen-landing,#screen-quiz,#screen-form,.toast,.particles{display:none !important}#screen-result{display:block !important}}
-  
-
-/* White atlas visual override: white background, black type, deep gray frames */
-:root{
-  --bg:#ffffff; --paper:#ffffff; --ink:#151515; --soft:#3e3e3e; --muted:#777777;
-  --gold:#3f3f3f; --gold-lt:#555555; --gold-pale:#ffffff;
-  --line:#dedede; --line-d:#565656;
-  --sh:0 10px 28px rgba(0,0,0,.055); --sh-s:0 4px 14px rgba(0,0,0,.045);
-}
-body{background:#ffffff;color:#151515;}
-body::before{display:none;}
-.particles{display:none;}
-.brand-bar{border-bottom:1px solid #555;color:#555;}
-.ld-eye,.q-eye,.form-ey,.res-ey,.r-lbl,.score-lbl,.meta-lbl{color:#4a4a4a;}
-.ld-title em,.res-en{color:#333;}
-.hero,.card,.qcard,.form-card,.res-hero,.score-wrap,.r-block,.companion,
-.meta-i,.rank-box,.consent-wrap,.olabel,.opt,.pill,.tag,.sc{
-  background:#fff !important;
-  border-color:#555 !important;
-  box-shadow:none !important;
-}
-.res-hero{background:#fff !important;border:1.5px solid #444 !important;}
-.result-hero{background:#fff !important;border-color:#555 !important;}
-.res-portrait,.cp-frame,.char-frame{background:#fff !important;border-color:#555 !important;box-shadow:none !important;}
-.opt.sel,.sc.top{background:#f6f6f6 !important;border-color:#333 !important;box-shadow:0 0 0 2px rgba(0,0,0,.08) !important;}
-.pdot.done,.btn-start,.btn-n.pri,.btn-submit,.btn-copy{background:#171717 !important;border-color:#171717 !important;color:#fff !important;}
-.pdot.now{background:#555 !important;border-color:#555 !important;box-shadow:0 0 0 4px rgba(0,0,0,.08) !important;}
-.bar-fill{filter:saturate(.45);}
-.atlas-badge{border-color:#555;color:#333;background:#fff;}
-.submit-notice{background:#fff;border-left:3px solid #555;color:#3e3e3e;}
-.btn-card{background:#fff;color:#171717;border:1.5px solid #555;border-radius:999px;padding:11px 22px;cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;transition:all .2s;}
-.btn-card:hover{border-color:#171717;transform:translateY(-1px)}
-@media print{body{background:#fff}.r-acts,.score-wrap,.summary-box,#submitNotice{display:none!important}.res-hero,.r-block{break-inside:avoid}}
-
-  
-
-/* Helori homepage avatar + readable atlas card updates */
-.constellation{grid-template-columns:repeat(7,minmax(74px,1fr));gap:18px;align-items:start;}
-.constellation .char-frame.avatar-frame{aspect-ratio:1/1;border-radius:50%;background:#fff;border:1.5px solid #565656;overflow:hidden;}
-.constellation .char-frame.avatar-frame img{position:relative!important;top:auto!important;left:auto!important;width:100%!important;height:100%!important;object-fit:cover;display:block;filter:saturate(.55) contrast(.96) brightness(1.04);}
-.constellation .c-name{margin-top:2px;font-size:12px;letter-spacing:.22em;color:#777;}
-.r-txt,.meta-val,.summary-box{word-break:break-word;overflow-wrap:anywhere;}
-.res-name{word-break:keep-all;overflow-wrap:anywhere;}
-@media(max-width:780px){.constellation{grid-template-columns:repeat(4,1fr);gap:14px;width:min(420px,92vw)}.constellation .c-name{display:block;font-size:10px}.ld-title{font-size:clamp(46px,13vw,68px)}}
-
-  
-/* Latest result simplification: no Helori Guide side tracker, one primary Helori only */
-.qwrap{grid-template-columns:1fr !important;max-width:820px;margin:0 auto;}
-.companion{display:none !important;}
-#screen-result .res-hero{max-width:720px;margin-left:auto;margin-right:auto;text-align:center;background:#fff !important;border:1.5px solid #555 !important;}
-#screen-result .res-char{display:flex !important;flex-direction:column;align-items:center;gap:24px;}
-#screen-result .res-portrait{width:min(360px,76vw) !important;aspect-ratio:1/1 !important;border-radius:50% !important;overflow:hidden;background:#fff !important;border:1.5px solid #555 !important;box-shadow:none !important;}
-#screen-result .res-portrait img{position:relative !important;top:auto !important;left:auto !important;width:100% !important;height:100% !important;object-fit:cover !important;filter:saturate(.62) contrast(.95) brightness(1.04);}
-#screen-result .res-name{font-size:clamp(34px,6vw,54px);margin-top:4px;margin-bottom:6px;}
-#screen-result .res-en{display:block;font-size:18px;color:#555;margin-bottom:18px;}
-.simple-result{max-width:520px;margin:0 auto;color:#3e3e3e;font-size:16px;line-height:2;white-space:pre-line;}
-#screen-result .res-meta,#screen-result .tag-row,#screen-result .score-wrap{display:none !important;}
-#screen-result .r-grid{display:block;max-width:720px;margin:18px auto 0;}
-#screen-result .r-block:not(:last-child){display:none !important;}
-#screen-result .r-block:last-child{border:0 !important;padding:0 !important;background:#fff !important;box-shadow:none !important;text-align:center;}
-#screen-result .r-block:last-child .r-lbl,#screen-result .summary-box,#screen-result #submitNotice{display:none !important;}
-#screen-result .r-acts{justify-content:center;margin-top:8px;}
-
-  
-/* Final override: remove Helori Guide side tracker, single-column quiz layout */
-.qwrap{display:block !important;grid-template-columns:1fr !important;max-width:900px;margin:0 auto;}
-.companion,.cp-frame,.cp-bars,.cp-tags,#cpframe,#cpimg,#cpname,#cpworld,#cptags,#cpbars{display:none !important;}
-.qcard{max-width:900px;margin:0 auto;}
-
-  
-#screen-result .result-scent-line{margin:0 auto 14px;max-width:520px;font-size:16px;line-height:1.9;color:#5a5a5a;white-space:pre-line;}
-
-    .line-actions{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0 10px}
-    .btn-line{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;font-family:'Noto Serif TC',serif;font-size:14px;letter-spacing:.04em;border-radius:999px;padding:13px 22px;border:1.5px solid #2f2f2f;background:#2f2f2f;color:#fff;transition:all .2s}
-    .btn-line.secondary{background:#fff;color:#2f2f2f}
-    .btn-line:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.08)}
-    .line-note{font-size:13px;color:var(--soft);line-height:1.8;margin:8px 0 0}
-
+    :root{--ink:#171717;--soft:#444;--muted:#777;--line:#565656;--light:#d8d8d8;--paper:#fff;--pale:#f7f7f5;--r:22px}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:"Noto Serif TC","PingFang TC",serif;background:#fff;color:var(--ink);line-height:1.82;letter-spacing:.02em}
+    button,a{font:inherit}
+    .shell{width:min(980px,92vw);margin:0 auto;padding-bottom:72px}
+    .brand{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:22px 0 15px;border-bottom:1px solid var(--line);font-family:"Cormorant Garamond",serif;letter-spacing:.2em;text-transform:uppercase;font-size:12px;color:#555}
+    .brand strong{color:#111;font-weight:600}
+    .screen{display:none}.screen.active{display:block}
+    #landing.screen.active{display:flex;min-height:86vh;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 0 60px}
+    .eyebrow{font-family:"Cormorant Garamond",serif;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:#555;margin-bottom:14px}
+    h1{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(46px,10vw,88px);line-height:1.04;letter-spacing:.04em;margin-bottom:12px}
+    h1 em{font-style:italic}.subtitle{font-size:18px;color:#333;margin-bottom:18px}.lead{font-size:15px;color:var(--soft);max-width:560px;margin:0 auto 34px;line-height:2}
+    .constellation{display:grid;grid-template-columns:repeat(7,1fr);gap:16px;width:min(760px,94vw);margin:0 auto 34px}
+    .mini{text-align:center}.avatar{aspect-ratio:1/1;border:1.5px solid var(--line);border-radius:50%;overflow:hidden;background:#fff}
+    .avatar img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.58) contrast(.96) brightness(1.04)}
+    .mini span{display:block;font-family:"Cormorant Garamond",serif;font-size:12px;letter-spacing:.14em;color:#777;margin-top:6px;text-transform:uppercase}
+    .pills{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-bottom:30px}.pill{border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-family:"Cormorant Garamond",serif;font-size:12px;letter-spacing:.12em;color:#444;background:#fff}
+    .btn{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:13px 24px;border:1.5px solid #202020;text-decoration:none;cursor:pointer;transition:.2s;min-height:48px;background:#fff;color:#202020}
+    .btn:hover{transform:translateY(-1px)}.btn.primary{background:#202020;color:#fff}.btn.ghost{background:transparent;color:#555;border-color:#999}.btn.big{font-family:"Cormorant Garamond",serif;text-transform:uppercase;letter-spacing:.22em;padding:16px 44px}
+    #quiz,#result{padding-top:34px}.progress{display:flex;align-items:center;gap:12px;margin-bottom:24px}.bar{height:4px;background:#eee;border-radius:999px;flex:1;overflow:hidden}.bar span{display:block;height:100%;background:#202020;width:0%;transition:.25s}.counter{font-family:"Cormorant Garamond",serif;color:#777;letter-spacing:.14em;min-width:74px;text-align:right}
+    .card{background:#fff;border:1.5px solid var(--line);border-radius:var(--r);padding:clamp(24px,5vw,42px);max-width:860px;margin:0 auto}.q-no{font-family:"Cormorant Garamond",serif;font-size:56px;color:#d0d0d0;line-height:1}.q-zh{font-size:20px;margin:4px 0}.q-en{font-family:"Cormorant Garamond",serif;font-style:italic;color:#777;margin-bottom:24px}
+    .opts{display:flex;flex-direction:column;gap:10px}.opt{border:1.5px solid #d5d5d5;border-radius:16px;padding:15px 18px;background:#fff;text-align:left;cursor:pointer;color:#333;width:100%;transition:.18s}.opt:hover,.opt.selected{border-color:#222;background:#f6f6f6}.opt b{font-family:"Cormorant Garamond",serif;margin-right:8px}.opt small{display:block;color:#777;font-family:"Cormorant Garamond",serif;font-style:italic;margin-top:3px}
+    .nav{display:flex;justify-content:space-between;gap:12px;margin-top:28px}.nav button:disabled{opacity:.3;pointer-events:none}
+    .result-card{max-width:760px;margin:0 auto;text-align:center;border:1.5px solid var(--line);border-radius:var(--r);padding:clamp(24px,5vw,42px);background:#fff}.portrait{width:min(360px,76vw);aspect-ratio:1/1;border:1.5px solid var(--line);border-radius:50%;overflow:hidden;margin:0 auto 24px}.portrait img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.62) contrast(.96) brightness(1.04)}
+    .badge{display:inline-block;border:1px solid #555;border-radius:999px;padding:5px 14px;font-family:"Cormorant Garamond",serif;letter-spacing:.18em;text-transform:uppercase;font-size:11px;color:#444;margin-bottom:12px}.res-name{font-family:"Cormorant Garamond",serif;font-size:clamp(36px,7vw,58px);line-height:1.1;margin-bottom:2px}.res-en{font-family:"Cormorant Garamond",serif;font-style:italic;color:#666;margin:6px 0 16px;font-size:18px}.scent-line{color:#555;margin-bottom:12px}.desc{max-width:560px;margin:0 auto 22px;color:#3e3e3e;line-height:2}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:18px 0 12px}.hint{font-size:13px;color:#666;line-height:1.8;margin:0 auto 20px;max-width:580px}.detail{max-width:760px;margin:18px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:left}.box{border:1px solid var(--light);border-radius:18px;padding:18px;background:#fff}.box.full{grid-column:1/-1}.box h3{font-family:"Cormorant Garamond",serif;text-transform:uppercase;letter-spacing:.16em;font-size:12px;color:#555;margin-bottom:8px}.box p{color:#444;font-size:14px;white-space:pre-line}
+    .footer-brand{margin:28px auto 0;text-align:center;font-family:"Cormorant Garamond",serif;letter-spacing:.14em;text-transform:uppercase;color:#777;font-size:12px}.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(12px);opacity:0;background:#202020;color:#fff;padding:11px 20px;border-radius:999px;transition:.2s;z-index:10;max-width:86vw;text-align:center}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    @media(max-width:760px){.brand{font-size:10px;align-items:flex-start}.constellation{grid-template-columns:repeat(4,1fr);gap:13px}.mini span{font-size:10px}.detail{grid-template-columns:1fr}.nav{flex-direction:column-reverse}.nav button,.actions a,.actions button{width:100%}}
   </style>
 </head>
 <body>
-<div class="particles" id="particles"></div>
-<div class="shell">
-  <div class="brand-bar"><div class="brand-mark">H.FUGUE ATELIER</div><div>Keylume · Helori Origin Atlas</div></div>
-  <div id="screen-landing">
-    <div class="ld-eye">Keylume · Helori Origin Atlas</div>
-    <h1 class="ld-title">Find Your<br><em>Helori</em></h1>
-    <div class="ld-en">找到屬於你的氣味赫洛里</div>
-    <p class="ld-sub">遠古時代就存在的神祕生物，<br>這個世界氣味的源頭，Helori，<br>正在等待尋找他的人。</p>
-    <div class="constellation" id="constellation"></div>
-    <div class="ld-pills"><span class="pill">10 個場景選擇</span><span class="pill">單一 Helori 配對</span><span class="pill">專屬圖鑑卡下載</span></div>
-    <button class="btn-start" onclick="startQuiz()">Find Your Helori</button>
-  </div>
-  <div id="screen-quiz">
-    <div class="qprog"><div class="ptrack" id="ptrack"></div><div class="plabel" id="plabel">01 / 10</div></div>
-    <div class="qwrap">
-      <div id="qarea"></div>
-    </div>
-  </div>
-  <div id="screen-result">
-    <span class="res-ey">Keylume · Helori Origin Atlas · Your Origin</span>
-    <div class="res-hero"><div class="res-char">
-      <div class="res-portrait"><img id="resimg" src="" alt=""/></div>
-      <div>
-        <span class="atlas-badge" id="atlasNo">Atlas No.</span>
-        <span class="res-matched">Your Helori Is …</span>
-        <div class="res-name" id="resType"></div><div class="res-en" id="resEn"></div><p class="result-scent-line" id="resultScentLine"></p><p class="simple-result" id="simpleResultText"></p>
-        <div class="line-actions">
-          <a id="lineGetBtn" class="btn-line" target="_blank" rel="noopener">到 LINE 索取我的 Helori</a>
-          <a id="lineBookBtn" class="btn-line secondary" target="_blank" rel="noopener">我想預約</a>
-          <a id="lineNotifyBtn" class="btn-line secondary" target="_blank" rel="noopener">開課請通知我</a>
-        </div>
-        <p class="line-note">點擊後會開啟 LINE 並帶入文字；請在 LINE 內自行送出訊息。</p>
-        <div class="res-meta">
-          <div class="meta-i"><span class="meta-lbl">Origin</span><span class="meta-val" id="resOrigin"></span></div>
-          <div class="meta-i"><span class="meta-lbl">Instrument</span><span class="meta-val" id="resInstr"></span></div>
-          <div class="meta-i"><span class="meta-lbl">Scent Direction</span><span class="meta-val" id="resScent"></span></div>
-          <div class="meta-i"><span class="meta-lbl">Taste</span><span class="meta-val" id="resTaste"></span></div>
-        </div>
-        <div class="tag-row" id="tagRow"></div>
-      </div>
-    </div></div>
-    <div class="score-wrap"><span class="score-lbl">Helori Resonance Score</span><div class="score-grid" id="scoreGrid"></div></div>
-    <div class="r-grid">
-      <div class="r-block full"><span class="r-lbl">Character File · 角色檔案</span><p class="r-txt" id="rDesc"></p></div>
-      <div class="r-block"><span class="r-lbl">Scent Direction · 氣味方向</span><p class="r-txt" id="rFam"></p></div>
-      <div class="r-block"><span class="r-lbl">Suggested Materials · 推薦原料</span><p class="r-txt" id="rMat"></p></div>
-      <div class="r-block full"><span class="r-lbl">Formula Direction · 配方方向</span><p class="r-txt" id="rForm"></p></div>
-      <div class="r-block full"><span class="r-lbl">Sensory Notes · 感官線索</span><p class="r-txt" id="rAdv"></p></div>
-      <div class="r-block full">
-        <span class="r-lbl">Result Summary · 結果摘要</span>
-        <div class="summary-box" id="summaryBox"></div>
-        <div class="r-acts"><button class="btn-copy" id="copyBtn">複製結果</button><button class="btn-card" id="downloadCardBtn">下載圖鑑卡</button><button class="btn-print" id="printBtn">列印</button><button class="btn-reset" id="resetBtn">重新尋找赫洛里</button></div>
-        <div class="submit-notice" id="submitNotice">本測驗不收集個人資料。若想保留結果，請透過 LINE 主動傳送。</div>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="toast" id="toast"></div>
-<script>
-const IMGS={
-  A:"download_cards/misti.jpg",
-  B:"download_cards/flori.jpg",
-  C:"download_cards/velmo.jpg",
-  D:"download_cards/ambra.jpg",
-  E:"download_cards/nocta.jpg",
-  F:"download_cards/tealu.jpg",
-  G:"download_cards/mossi.jpg"
-};
-const CARD_IMGS={
-  A:"download_cards/misti.jpg",
-  B:"download_cards/flori.jpg",
-  C:"download_cards/velmo.jpg",
-  D:"download_cards/ambra.jpg",
-  E:"download_cards/nocta.jpg",
-  F:"download_cards/tealu.jpg",
-  G:"download_cards/mossi.jpg"
-};
+  <div class="shell">
+    <div class="brand"><strong>Hana's Scent Artist</strong><span>H.FUGUE ATELIER</span></div>
 
-const AVATAR_IMGS={
-  A:"assets/avatars/misti.jpg",
-  B:"assets/avatars/flori.jpg",
-  C:"assets/avatars/velmo.jpg",
-  D:"assets/avatars/ambra.jpg",
-  E:"assets/avatars/nocta.jpg",
-  F:"assets/avatars/tealu.jpg",
-  G:"assets/avatars/mossi.jpg"
-};
-const CORRECT_AVATAR_IMGS={
-  A:"assets/avatars/misti.jpg",
-  B:"assets/avatars/flori.jpg",
-  C:"assets/avatars/velmo.jpg",
-  D:"assets/avatars/ambra.jpg",
-  E:"assets/avatars/nocta.jpg",
-  F:"assets/avatars/tealu.jpg",
-  G:"assets/avatars/mossi.jpg"
-};
-function getCorrectAvatar(k){return CORRECT_AVATAR_IMGS[k]||AVATAR_IMGS[k]||IMGS[k]||'';}
-const ORDER=['A','B','C','D','E','F','G'];
-const CM={A:{name:"Misti",world:"Mistvale",color:"#7ab5c8"},B:{name:"Flori",world:"Lumen Garden",color:"#cc8090"},C:{name:"Velmo",world:"Echo Timber Grove",color:"#6e8862"},D:{name:"Ambra",world:"Amber Hall",color:"#b8803a"},E:{name:"Nocta",world:"Shadow Stage",color:"#524070"},F:{name:"Tealu",world:"White Tone Tea Hills",color:"#7a9e7a"},G:{name:"Mossi",world:"Archive Mossland",color:"#7a6545"}};
+    <section id="landing" class="screen active">
+      <div class="eyebrow">Keylume · Helori Origin Atlas</div>
+      <h1>Find Your<br><em>Helori</em></h1>
+      <div class="subtitle">找到專屬你的 Helori</div>
+      <p class="lead">遠古時代就存在的神祕生物，這個世界氣味的源頭，Helori，正在等待尋找他的人。</p>
+      <div class="constellation" id="constellation"></div>
+      <div class="pills"><span class="pill">10 個場景選擇</span><span class="pill">LINE 索取完整結果</span><span class="pill">可分享給朋友</span></div>
+      <button class="btn primary big" id="startBtn">Find Your Helori</button>
+    </section>
+
+    <section id="quiz" class="screen">
+      <div class="progress"><div class="bar"><span id="barFill"></span></div><div class="counter" id="counter">01 / 10</div></div>
+      <div class="card" id="questionCard"></div>
+    </section>
+
+    <section id="result" class="screen">
+      <div class="eyebrow">Your Helori Is …</div>
+      <div class="result-card">
+        <div class="portrait"><img id="resImg" alt="Helori result"></div>
+        <span class="badge" id="atlasNo"></span>
+        <div class="res-name" id="resName"></div>
+        <div class="res-en" id="resEn"></div>
+        <p class="scent-line" id="scentLine"></p>
+        <p class="desc" id="resDesc"></p>
+        <div class="actions">
+          <a class="btn primary" id="addFriendBtn" href="https://line.me/R/ti/p/@hscent" target="_blank" rel="noopener">加入 LINE 索取完整結果</a>
+          <button class="btn" id="shareBtn">分享給朋友測測看</button>
+          <button class="btn" id="courseBtn">我想了解 Helori 調香課程</button>
+          <button class="btn ghost" id="resetBtn">重新測驗</button>
+        </div>
+        <p class="hint">請先加入 LINE 官方帳號，再點「我想了解 Helori 調香課程」。若在 LINE App 內開啟，系統會嘗試直接送出你的測驗結果；若無法直接送出，會改開 LINE 官方帳號並帶入文字，請手動送出。</p>
+      </div>
+      <div class="detail">
+        <div class="box"><h3>Origin</h3><p id="origin"></p></div>
+        <div class="box"><h3>Instrument</h3><p id="instrument"></p></div>
+        <div class="box full"><h3>Scent Direction</h3><p id="families"></p></div>
+        <div class="box full"><h3>Suggested Materials</h3><p id="materials"></p></div>
+      </div>
+      <div class="footer-brand">H.FUGUE ATELIER｜A scent atelier by Hana</div>
+    </section>
+  </div>
+  <div class="toast" id="toast"></div>
+
+<script>
+const LIFF_ID='2010125170-LLEvROMg';
+const LIFF_URL='https://liff.line.me/2010125170-LLEvROMg';
+const LINE_OA_ID='@hscent';
+let liffReady=false,currentProfile=null;
+const BASE='https://h-s017.github.io/heloribyhana/';
+const imgs={A:BASE+'assets/avatars/misti.jpg',B:BASE+'assets/avatars/flori.jpg',C:BASE+'assets/avatars/velmo.jpg',D:BASE+'assets/avatars/ambra.jpg',E:BASE+'assets/avatars/nocta.jpg',F:BASE+'assets/avatars/tealu.jpg',G:BASE+'assets/avatars/mossi.jpg'};
+const names={A:'Misti',B:'Flori',C:'Velmo',D:'Ambra',E:'Nocta',F:'Tealu',G:'Mossi'};
+const order=['A','B','C','D','E','F','G'];
 const profiles={
-A:{type:"Misti｜Mistrange",english:"Citrus Clarity · Mistvale",short:"Misti",atlasNo:"01",origin:"Mistvale",instrument:"Mist Crystal Keys",scentShort:"Citrus · Tea · Transparent Floral · White Musk",taste:"Lemon peel · Bergamot candy · Sparkling jelly",tags:["清透 Clarity","柑橘 Citrus","空氣感 Airy","秩序 Order"],desc:"Misti 來自 Mistvale，一片總在清晨甦醒的霧色溪谷。空氣中有柑橘皮、冷露與潔淨皂感，聲音像水晶鍵輕輕敲響。清澈不是冷漠，是一種清醒的溫柔。",families:"偏好清楚、透明、有秩序感的香氣。配方可從柑橘、茶感、透明花香、白麝香與輕木質開始設計。",materials:"Bergamot 佛手柑、Lime 萊姆、Lemon 檸檬、Petitgrain 苦橙葉、Neroli 橙花、Hedione、White Musk 白麝香、Light Woods 輕木質。",formula:"柑橘 Citrus 35%＋茶感 Tea 25%＋透明花香 Transparent Floral 20%＋白麝香／輕木質 White Musk/Light Woods 20%。",advice:"Disposition：清醒、敏銳、俐落；偏好乾淨輪廓與明確結構。\nMusic：明亮、清晰、線條分明的旋律。\nInstrument：Mist Crystal Keys，由透明晶石與共鳴鍵構成，音色清亮。\nTaste：檸檬薄片、佛手柑糖、氣泡水晶果凍。"},
-B:{type:"Flori｜Florasleep",english:"Soft Floral Garden · Lumen Garden",short:"Flori",atlasNo:"02",origin:"Lumen Garden",instrument:"Petal Lyre",scentShort:"Rose · Jasmine · Orange Blossom · Soft Musk",taste:"Nectar yogurt · Berry tart · White peach tea",tags:["柔光 Soft Light","花香 Floral","細膩 Delicate","光影 Luminous"],desc:"Flori 來自 Lumen Garden，一座被柔光覆蓋的花庭。花瓣、空氣與旋律在那裡緩慢交疊。細膩，不是脆弱——是把美留住的能力。",families:"偏好柔和、優雅、有光影感的花香。配方可從玫瑰、茉莉、橙花、柔和花果香與白麝香開始設計。",materials:"Rose 玫瑰、Jasmine 茉莉、Neroli 橙花、Orange Blossom 橙花香調、Peony 牡丹、Hedione、Benzyl Acetate 乙酸苄酯、White Musk 白麝香。",formula:"柔和花香 Soft Floral 40%＋透明花香 Transparent Floral 20%＋果香／蜜感 Fruity/Honeyed Accent 20%＋白麝香 White Musk 20%。",advice:"Disposition：細膩、感受力強；重視美感、情緒與細節。\nMusic：流動、透明、帶有柔光的旋律。\nInstrument：Petal Lyre，以花瓣與細弦構成，音色柔軟。\nTaste：花蜜優格、莓果塔、白桃花茶。"},
-C:{type:"Velmo｜Velmoss",english:"Woody Ground · Echo Timber Grove",short:"Velmo",atlasNo:"03",origin:"Echo Timber Grove",instrument:"Moss Kalimba",scentShort:"Cedarwood · Sandalwood · Vetiver · Moss",taste:"Roasted nuts · Rye biscuit · Woody warm drink",tags:["木質 Woody","沉穩 Grounded","質地 Texture","時間感 Time"],desc:"Velmo 來自 Echo Timber Grove，一片有舊木、苔蘚與低音回聲的森林。氣味不急於展現，而是慢慢沉入材質與時間之中。",families:"偏好穩定、沉著、有材質感的香氣。配方可從雪松、檀香、岩蘭草、苔蘚與柔和麝香開始設計。",materials:"Cedarwood 雪松、Sandalwood 檀香、Vetiver 岩蘭草、Patchouli 廣藿香、Iso E Super、Ambroxan、Cashmeran、Soft Musk 柔和麝香。",formula:"乾燥木質 Dry Woods 40%＋柔和麝香 Soft Musk 20%＋草本／苔蘚 Herbal/Moss 20%＋少量柑橘 Citrus Accent 20%。",advice:"Disposition：沉穩、內斂、耐看；偏好有深度與餘韻的表達。\nMusic：低音穩定、和聲厚實、具承托感的音樂。\nInstrument：Moss Kalimba，長在木質共鳴箱上的拇指琴，音色溫潤低沉。\nTaste：烤堅果、黑麥餅、木質香氣的熱飲。"},
-D:{type:"Ambra｜Ambrelle",english:"Amber Comfort · Amber Hall",short:"Ambra",atlasNo:"04",origin:"Amber Hall",instrument:"Amber Bellows",scentShort:"Amber · Vanilla · Resin · Soft Spice",taste:"Caramel pudding · Cinnamon milk tea · Honey croissant",tags:["琥珀 Amber","溫暖 Warm","包覆 Cocooning","甜暖 Soft Sweet"],desc:"Ambra 來自 Amber Hall，一間長年停留在黃昏光中的暖室。這裡的溫暖，不是表演出來的——它就在空氣裡，一直等著你。",families:"偏好溫暖、柔軟、有包覆感的香氣。配方可從琥珀、香草、樹脂、柔和辛香與木質開始設計。",materials:"Vanilla 香草、Tonka Bean 零陵香豆、Benzoin 安息香、Labdanum 岩薔薇、Amber Accord 琥珀香基、Cinnamon 肉桂、Coumarin 香豆素、Musk 麝香。",formula:"琥珀／樹脂 Amber/Resin 35%＋香草／甜感 Vanilla/Sweetness 25%＋木質 Woods 20%＋柔和花香 Soft Floral 20%。",advice:"Disposition：溫和、穩定；擅長建立舒適氛圍。\nMusic：旋律明確、情緒飽滿、帶有包覆感的音樂。\nInstrument：Amber Bellows，小型風箱樂器，聲音圓潤溫暖。\nTaste：焦糖布丁、肉桂奶茶、蜂蜜可頌。"},
-E:{type:"Nocta｜Noctune",english:"Noir Dramatic · Shadow Stage",short:"Nocta",atlasNo:"05",origin:"Shadow Stage",instrument:"Nocturne Strings",scentShort:"Smoke · Leather · Spice · Dark Woods",taste:"Dark chocolate · Spiced berries · Smoked nuts",tags:["戲劇 Drama","煙燻 Smoky","陰影 Shadow","轉折 Contrast"],desc:"Nocta 來自 Shadow Stage，一座總停在開演前一刻的劇場。有些氣味，不是用來討喜的——是用來被記住的。",families:"偏好有張力、有陰影、有故事轉折的香氣。配方可從煙燻、皮革、辛香、深色木質與樹脂開始設計。",materials:"Labdanum 岩薔薇、Frankincense 乳香、Myrrh 沒藥、Leather Accord 皮革香基、Clove 丁香、Patchouli 廣藿香、Ambroxan、Dark Woods 深色木質。",formula:"煙燻／皮革 Smoke/Leather 30%＋辛香 Spice 20%＋深色木質 Dark Woods 25%＋樹脂／苔蘚 Resin/Moss 25%。",advice:"Disposition：獨立、有辨識度；偏好反差、張力與記憶點。\nMusic：低音明顯、色彩較深、具戲劇張力的音樂。\nInstrument：Nocturne Strings，帶有深色共鳴的弦樂器，聲音低而集中。\nTaste：黑巧克力、辛香莓果、煙燻堅果。"},
-F:{type:"Tealu｜Tealune",english:"Tea & Air · White Tone Tea Hills",short:"Tealu",atlasNo:"06",origin:"White Tone Tea Hills",instrument:"Tea-Breath Recorder",scentShort:"Tea · Green · Transparent Floral · White Musk",taste:"Sencha · Rice sweets · White grape · Light wagashi",tags:["茶感 Tea","留白 Space","清透 Clear","安靜 Quiet"],desc:"Tealu 來自 White Tone Tea Hills，一片介於茶園、霧氣與空白樂譜之間的地帶。留白，是它選擇說話的方式。",families:"偏好清透、安靜、有留白感的香氣。配方可從茶感、透明花香、白麝香與輕木質開始設計。",materials:"Green Tea 綠茶、White Tea Accord 白茶香基、Hedione、Muguet 鈴蘭、Galaxolide、Ambroxan、Petitgrain 苦橙葉、Light Woods 輕木質。",formula:"茶感／綠意 Tea/Green 35%＋透明花香 Transparent Floral 25%＋白麝香 White Musk 25%＋輕木質 Light Woods 15%。",advice:"Disposition：安靜、清醒、保有距離感；偏好留白與乾淨餘韻。\nMusic：聲音乾淨、停頓明確、節奏不急的音樂。\nInstrument：Tea-Breath Recorder，音色清楚而輕，像茶氣從杯面緩慢升起。\nTaste：煎茶、米香小點、白葡萄、淡味和菓子。"},
-G:{type:"Mossi｜Mosscript",english:"Chypre Archive · Archive Mossland",short:"Mossi",atlasNo:"07",origin:"Archive Mossland",instrument:"Mossgram",scentShort:"Moss · Chypre · Bergamot · Patchouli",taste:"Dried fig · Herbal biscuit · Black coffee · Nut cheese",tags:["典藏 Archive","苔蘚 Moss","西普 Chypre","舊靈魂 Old Soul"],desc:"Mossi 來自 Archive Mossland，一處位於舊圖書館與森林交界的地帶。某些香氣，是給那些不需要解釋自己品味的人。",families:"偏好有層次、有舊靈魂、有收藏感的香氣。配方可從苔蘚、西普、佛手柑、廣藿香、草本與皮革開始設計。",materials:"Oakmoss Accord 橡木苔香基、Bergamot 佛手柑、Patchouli 廣藿香、Iris 鳶尾、Lavender 薰衣草、Coumarin 香豆素、Leather Accord 皮革香基、Herbal Notes 草本。",formula:"苔蘚／西普 Moss/Chypre 35%＋佛手柑 Bergamot 20%＋廣藿香／木質 Patchouli/Woods 25%＋草本／皮革 Herbal/Leather 20%。",advice:"Disposition：觀察力強、獨立、有收藏感；偏好不直白、不流行、具歷史感的表達。\nMusic：結構清楚但帶有陰影的音樂。\nInstrument：Mossgram，介於留聲機、風琴與小鋼琴之間，聲音像從舊紙頁與木箱中傳出。\nTaste：無花果乾、草本餅乾、黑咖啡、堅果起司。"}
+A:{type:'Misti｜迷絲緹',en:'Citrus Clarity · Mistvale',origin:'Mistvale',instrument:'Mist Crystal Keys',scent:'Citrus · Tea · Transparent Floral · White Musk',desc:'Misti 來自 Mistvale，一片總在清晨甦醒的霧色溪谷。空氣中有柑橘皮、冷露與潔淨皂感。清澈不是冷漠，是一種清醒的溫柔。',families:'偏好清楚、透明、有秩序感的香氣。配方可從柑橘、茶感、透明花香、白麝香與輕木質開始設計。',materials:'Bergamot 佛手柑、Lime 萊姆、Petitgrain 苦橙葉、Neroli 橙花、Hedione、White Musk 白麝香、Light Woods 輕木質。'},
+B:{type:'Flori｜芙蘿莉',en:'Soft Floral Garden · Lumen Garden',origin:'Lumen Garden',instrument:'Petal Lyre',scent:'Rose · Jasmine · Orange Blossom · Soft Musk',desc:'Flori 來自 Lumen Garden，一座被柔光覆蓋的花庭。花瓣、空氣與旋律在那裡緩慢交疊。細膩不是脆弱，是把美留住的能力。',families:'偏好柔和、優雅、有光影感的花香。配方可從玫瑰、茉莉、橙花、柔和花果香與白麝香開始設計。',materials:'Rose 玫瑰、Jasmine 茉莉、Neroli 橙花、Peony 牡丹、Hedione、Benzyl Acetate 乙酸苄酯、White Musk 白麝香。'},
+C:{type:'Velmo｜維爾默',en:'Woody Ground · Echo Timber Grove',origin:'Echo Timber Grove',instrument:'Moss Kalimba',scent:'Cedarwood · Sandalwood · Vetiver · Moss',desc:'Velmo 來自 Echo Timber Grove，一片有舊木、苔蘚與低音回聲的森林。氣味不急於展現，而是慢慢沉入材質與時間之中。',families:'偏好穩定、沉著、有材質感的香氣。配方可從雪松、檀香、岩蘭草、苔蘚與柔和麝香開始設計。',materials:'Cedarwood 雪松、Sandalwood 檀香、Vetiver 岩蘭草、Patchouli 廣藿香、Iso E Super、Ambroxan、Cashmeran。'},
+D:{type:'Ambra｜安布拉',en:'Amber Comfort · Amber Hall',origin:'Amber Hall',instrument:'Amber Bellows',scent:'Amber · Vanilla · Resin · Soft Spice',desc:'Ambra 來自 Amber Hall，一間長年停留在黃昏光中的暖室。這裡的溫暖不是表演出來的，它就在空氣裡，一直等著你。',families:'偏好溫暖、柔軟、有包覆感的香氣。配方可從琥珀、香草、樹脂、柔和辛香與木質開始設計。',materials:'Vanilla 香草、Tonka Bean 零陵香豆、Benzoin 安息香、Labdanum 岩薔薇、Amber Accord 琥珀香基、Cinnamon 肉桂。'},
+E:{type:'Nocta｜諾克塔',en:'Noir Dramatic · Shadow Stage',origin:'Shadow Stage',instrument:'Nocturne Strings',scent:'Smoke · Leather · Spice · Dark Woods',desc:'Nocta 來自 Shadow Stage，一座總停在開演前一刻的劇場。有些氣味不是用來討喜的，是用來被記住的。',families:'偏好有張力、有陰影、有故事轉折的香氣。配方可從煙燻、皮革、辛香、深色木質與樹脂開始設計。',materials:'Labdanum 岩薔薇、Frankincense 乳香、Myrrh 沒藥、Leather Accord 皮革香基、Clove 丁香、Patchouli 廣藿香。'},
+F:{type:'Tealu｜緹露',en:'Tea & Air · White Tone Tea Hills',origin:'White Tone Tea Hills',instrument:'Tea-Breath Recorder',scent:'Tea · Green · Transparent Floral · White Musk',desc:'Tealu 來自 White Tone Tea Hills，一片介於茶園、霧氣與空白樂譜之間的地帶。留白，是它選擇說話的方式。',families:'偏好清透、安靜、有留白感的香氣。配方可從茶感、透明花香、白麝香與輕木質開始設計。',materials:'Green Tea 綠茶、White Tea Accord 白茶香基、Hedione、Muguet 鈴蘭、Galaxolide、Petitgrain 苦橙葉。'},
+G:{type:'Mossi｜墨茜',en:'Chypre Archive · Archive Mossland',origin:'Archive Mossland',instrument:'Mossgram',scent:'Moss · Chypre · Bergamot · Patchouli',desc:'Mossi 來自 Archive Mossland，一處位於舊圖書館與森林交界的地帶。某些香氣，是給那些不需要解釋自己品味的人。',families:'偏好有層次、有舊靈魂、有收藏感的香氣。配方可從苔蘚、西普、佛手柑、廣藿香、草本與皮革開始設計。',materials:'Oakmoss Accord 橡木苔香基、Bergamot 佛手柑、Patchouli 廣藿香、Iris 鳶尾、Lavender 薰衣草、Leather Accord 皮革香基。'}
 };
 const questions=[
-{zh:"走進一個陌生空間，你最先注意到的是？",en:"What do you notice first when entering an unfamiliar space?",opts:[{t:"光線、空氣感，以及整體是否乾淨舒服",e:"Light, airiness, and whether the space feels clean",c:["A","F"]},{t:"花藝、色彩、裝飾與細節美感",e:"Flowers, colors, decoration, and refined visual details",c:["B"]},{t:"木頭、皮革、紙張、家具等材質質感",e:"Textures such as wood, leather, paper, and furniture",c:["C","G"]},{t:"這個地方有沒有故事、轉折或不尋常的氣氛",e:"Whether the space carries a story, contrast, or unusual atmosphere",c:["D","E"]}]},
-{zh:"如果用一種天氣形容你，你會選？",en:"If you were described as a type of weather, which would you choose?",opts:[{t:"清晨微風，明亮、清楚、沒有壓迫感",e:"A morning breeze: bright, clear, and light",c:["A"]},{t:"春天午後花園，柔和、細膩、有畫面",e:"A spring afternoon garden: soft, delicate, visual",c:["B"]},{t:"秋天森林，安靜、乾燥、有時間感",e:"An autumn forest: quiet, dry, and time-worn",c:["C","G"]},{t:"傍晚暖光或雨前空氣，有情緒也有神祕感",e:"Evening warm light or pre-rain air: emotional and mysterious",c:["D","E","F"]}]},
-{zh:"你最喜歡哪一種旅行畫面？",en:"Which travel scene appeals to you most?",opts:[{t:"海邊、白色建築、乾淨明亮的城市",e:"The seaside, white architecture, and a clean bright city",c:["A","F"]},{t:"花園、古典建築、優雅咖啡館",e:"Gardens, classical buildings, and elegant cafés",c:["B"]},{t:"山林、木屋、老書店或工藝小鎮",e:"Forests, wooden cabins, old bookstores, or craft villages",c:["C","G"]},{t:"市集、甜點店、博物館、老宅或異國巷弄",e:"Markets, dessert shops, museums, old houses, or foreign alleys",c:["D","E"]}]},
-{zh:"你做事情的方式比較像？",en:"Which describes the way you usually work?",opts:[{t:"先整理架構，再開始行動",e:"I organize the structure before taking action",c:["A"]},{t:"跟著感覺走，但很重視美感",e:"I follow my intuition but care strongly about aesthetics",c:["B"]},{t:"慢慢累積，喜歡穩定與深度",e:"I build slowly and value stability and depth",c:["C","G"]},{t:"重視現場氣氛，也喜歡做出自己的風格",e:"I value the atmosphere and like creating my own style",c:["D","E","F"]}]},
-{zh:"你希望別人怎麼形容你？",en:"How would you like others to describe you?",opts:[{t:"乾淨、理性、有分寸",e:"Clean, rational, and well-balanced",c:["A"]},{t:"優雅、細膩、有品味",e:"Elegant, delicate, and tasteful",c:["B"]},{t:"沉穩、成熟、有深度",e:"Calm, mature, and deep",c:["C","G"]},{t:"溫暖、有個性、讓人印象深刻",e:"Warm, distinctive, and memorable",c:["D","E","F"]}]},
-{zh:"當你聞到一支香，哪一種層次最容易讓你停留？",en:"When you smell a fragrance, which layer makes you linger?",opts:[{t:"清亮的開場：柑橘、茶感或潔淨皂感",e:"A clear opening: citrus, tea, or clean soapy notes",c:["A","F"]},{t:"柔和的花心：玫瑰、茉莉或橙花",e:"A soft floral heart: rose, jasmine, or orange blossom",c:["B"]},{t:"乾燥的骨架：雪松、檀木或岩蘭草",e:"A dry woody structure: cedarwood, sandalwood, or vetiver",c:["C"]},{t:"深色的尾韻：琥珀、苔蘚、皮革、辛香或樹脂",e:"A darker trail: amber, moss, leather, spices, or resins",c:["D","E","G"]}]},
-{zh:"如果要創作一支香，你最想表達的是？",en:"If you were creating a fragrance, what would you most want to express?",opts:[{t:"清醒、透明、自由",e:"Clarity, transparency, and freedom",c:["A","F"]},{t:"美、柔軟、浪漫記憶",e:"Beauty, softness, and romantic memory",c:["B"]},{t:"安定、時間感、內在力量",e:"Stability, a sense of time, and inner strength",c:["C","G"]},{t:"溫度、陪伴、故事、神祕與轉折",e:"Warmth, companionship, story, mystery, and contrast",c:["D","E"]}]},
-{zh:"在調香課裡，你最期待哪個部分？",en:"Which part of the perfumery class are you most looking forward to?",opts:[{t:"了解香調分類、結構和比例",e:"Understanding fragrance families, structure, and proportions",c:["A","G"]},{t:"聞香、形容氣味、建立感官詞彙",e:"Smelling materials, describing scents, building vocabulary",c:["B","F"]},{t:"學會穩定做出成熟、有質感的配方",e:"Learning to create stable, mature, refined formulas",c:["C"]},{t:"做出自己喜歡、能送人或有概念的作品",e:"Creating something personal, giftable, or concept-driven",c:["D","E"]}]},
-{zh:"如果你的香氣是一段音樂，它比較接近哪一種畫面？",en:"If your fragrance were a piece of music, which scene feels closest?",opts:[{t:"古典時期的清晰結構：明亮、均衡、乾淨",e:"Classical clarity: bright, balanced, clean, and orderly",c:["A","F"]},{t:"印象派的光影流動：柔和、朦朧，像水光與花影",e:"Impressionist light and motion: soft, hazy, like waterlight",c:["B","F"]},{t:"浪漫時期的情緒敘事：溫暖、深刻，帶有記憶",e:"Romantic emotional narrative: warm, deep, weighted with memory",c:["C","D"]},{t:"現代電影感的張力場景：低音、陰影、戲劇性",e:"Modern / cinematic tension: low tones, shadows, drama",c:["E","G"]}]},
-{zh:"如果用一幅畫形容你的美感，你會選？",en:"If your aesthetic were a painting, which would you choose?",opts:[{t:"大量留白與乾淨線條",e:"A composition with generous blank space and clean lines",c:["A","F"]},{t:"花卉、人物、柔光與裝飾性線條",e:"Flowers, figures, soft light, and decorative lines",c:["B"]},{t:"木頭、石材、大地色與厚實肌理",e:"Wood, stone, earth tones, and substantial texture",c:["C"]},{t:"暗色背景、古典肖像、舊紙張與時間感",e:"Dark backgrounds, classical portraits, old paper, and a sense of time",c:["D","E","G"]}]}
+{zh:'走進一個陌生空間，你最先注意到的是？',en:'What do you notice first when entering an unfamiliar space?',opts:[['光線、空氣感，以及整體是否乾淨舒服','Light, airiness, and whether the space feels clean',['A','F']],['花藝、色彩、裝飾與細節美感','Flowers, colors, decoration, and refined visual details',['B']],['木頭、皮革、紙張、家具等材質質感','Textures such as wood, leather, paper, and furniture',['C','G']],['這個地方有沒有故事、轉折或不尋常的氣氛','Whether the space carries a story, contrast, or unusual atmosphere',['D','E']]]},
+{zh:'如果用一種天氣形容你，你會選？',en:'If you were described as a type of weather, which would you choose?',opts:[['清晨微風，明亮、清楚、沒有壓迫感','A morning breeze: bright, clear, and light',['A']],['春天午後花園，柔和、細膩、有畫面','A spring afternoon garden: soft, delicate, visual',['B']],['秋天森林，安靜、乾燥、有時間感','An autumn forest: quiet, dry, and time-worn',['C','G']],['傍晚暖光或雨前空氣，有情緒也有神祕感','Evening warm light or pre-rain air: emotional and mysterious',['D','E','F']]]},
+{zh:'你最喜歡哪一種旅行畫面？',en:'Which travel scene appeals to you most?',opts:[['海邊、白色建築、乾淨明亮的城市','The seaside, white architecture, and a clean bright city',['A','F']],['花園、古典建築、優雅咖啡館','Gardens, classical buildings, and elegant cafés',['B']],['山林、木屋、老書店或工藝小鎮','Forests, wooden cabins, old bookstores, or craft villages',['C','G']],['市集、甜點店、博物館、老宅或異國巷弄','Markets, dessert shops, museums, old houses, or foreign alleys',['D','E']]]},
+{zh:'你做事情的方式比較像？',en:'Which describes the way you usually work?',opts:[['先整理架構，再開始行動','I organize the structure before taking action',['A']],['跟著感覺走，但很重視美感','I follow my intuition but care strongly about aesthetics',['B']],['慢慢累積，喜歡穩定與深度','I build slowly and value stability and depth',['C','G']],['重視現場氣氛，也喜歡做出自己的風格','I value the atmosphere and like creating my own style',['D','E','F']]]},
+{zh:'你希望別人怎麼形容你？',en:'How would you like others to describe you?',opts:[['乾淨、理性、有分寸','Clean, rational, and well-balanced',['A']],['優雅、細膩、有品味','Elegant, delicate, and tasteful',['B']],['沉穩、成熟、有深度','Calm, mature, and deep',['C','G']],['溫暖、有個性、讓人印象深刻','Warm, distinctive, and memorable',['D','E','F']]]},
+{zh:'當你聞到一支香，哪一種層次最容易讓你停留？',en:'When you smell a fragrance, which layer makes you linger?',opts:[['清亮的開場：柑橘、茶感或潔淨皂感','A clear opening: citrus, tea, or clean soapy notes',['A','F']],['柔和的花心：玫瑰、茉莉或橙花','A soft floral heart: rose, jasmine, or orange blossom',['B']],['乾燥的骨架：雪松、檀木或岩蘭草','A dry woody structure: cedarwood, sandalwood, or vetiver',['C']],['深色的尾韻：琥珀、苔蘚、皮革、辛香或樹脂','A darker trail: amber, moss, leather, spices, or resins',['D','E','G']]]},
+{zh:'如果要創作一支香，你最想表達的是？',en:'If you were creating a fragrance, what would you most want to express?',opts:[['清醒、透明、自由','Clarity, transparency, and freedom',['A','F']],['美、柔軟、浪漫記憶','Beauty, softness, and romantic memory',['B']],['安定、時間感、內在力量','Stability, a sense of time, and inner strength',['C','G']],['溫度、陪伴、故事、神祕與轉折','Warmth, companionship, story, mystery, and contrast',['D','E']]]},
+{zh:'在調香課裡，你最期待哪個部分？',en:'Which part of the perfumery class are you most looking forward to?',opts:[['了解香調分類、結構和比例','Understanding fragrance families, structure, and proportions',['A','G']],['聞香、形容氣味、建立感官詞彙','Smelling materials, describing scents, building vocabulary',['B','F']],['學會穩定做出成熟、有質感的配方','Learning to create stable, mature, refined formulas',['C']],['做出自己喜歡、能送人或有概念的作品','Creating something personal, giftable, or concept-driven',['D','E']]]},
+{zh:'如果你的香氣是一段音樂，它比較接近哪一種畫面？',en:'If your fragrance were a piece of music, which scene feels closest?',opts:[['古典時期的清晰結構：明亮、均衡、乾淨','Classical clarity: bright, balanced, clean, and orderly',['A','F']],['印象派的光影流動：柔和、朦朧，像水光與花影','Impressionist light and motion: soft, hazy, like waterlight',['B','F']],['浪漫時期的情緒敘事：溫暖、深刻，帶有記憶','Romantic emotional narrative: warm, deep, weighted with memory',['C','D']],['現代電影感的張力場景：低音、陰影、戲劇性','Modern / cinematic tension: low tones, shadows, drama',['E','G']]]},
+{zh:'如果用一幅畫形容你的美感，你會選？',en:'If your aesthetic were a painting, which would you choose?',opts:[['大量留白與乾淨線條','A composition with generous blank space and clean lines',['A','F']],['花卉、人物、柔光與裝飾性線條','Flowers, figures, soft light, and decorative lines',['B']],['木頭、石材、大地色與厚實肌理','Wood, stone, earth tones, and substantial texture',['C']],['暗色背景、古典肖像、舊紙張與時間感','Dark backgrounds, classical portraits, old paper, and a sense of time',['D','E','G']]]}
 ];
-
-// View cycling — JS setInterval (most reliable)
-// Full sheet is 2x2: TL=Front TR=Side BL=Back BR=Action
-// img: width:200%;height:auto. Cycling changes top/left.
-// top:-100% = move up by container height = show bottom half
-// left:-100% = move left by container width = show right half
-const VIEWS=[{t:"0%",l:"0%"},{t:"0%",l:"-100%"},{t:"-100%",l:"-100%"},{t:"-100%",l:"0%"}];
-let cycleTimer=null,cycleV=0;
-function setView(img,vi){const v=VIEWS[vi%4];img.style.top=v.t;img.style.left=v.l;}
-function startCycle(img,ms){stopCycle();cycleV=0;setView(img,0);cycleTimer=setInterval(()=>{cycleV=(cycleV+1)%4;setView(img,cycleV);},ms);}
-function stopCycle(){if(cycleTimer){clearInterval(cycleTimer);cycleTimer=null;}}
-
-let curQ=0,answers=new Array(10).fill(null),scores={A:0,B:0,C:0,D:0,E:0,F:0,G:0};
-const $=s=>document.querySelector(s),$$=s=>Array.from(document.querySelectorAll(s));
-function toast(m){const e=$('#toast');e.textContent=m;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2000);}
-function show(id){['landing','quiz','result'].forEach(s=>document.getElementById('screen-'+s).style.display=s===id?'block':'none');window.scrollTo({top:0,behavior:'smooth'});}
-
-function buildLanding(){
-  const ct=$('#constellation');
-  ORDER.forEach((k,i)=>{
-    const m=CM[k];
-    const cell=document.createElement('div');cell.className='c-cell';
-    cell.style.cssText='animation-duration:'+(3.8+i*.45)+'s;animation-delay:'+(i*.28)+'s';
-    const frame=document.createElement('div');frame.className='char-frame avatar-frame';
-    const img=document.createElement('img');
-    img.alt=m.name;
-    img.src=getCorrectAvatar(k);
-    frame.appendChild(img);
-    const nm=document.createElement('span');nm.className='c-name';nm.textContent=m.name;
-    cell.appendChild(frame);cell.appendChild(nm);ct.appendChild(cell);
-  });
-}
-
-function startQuiz(){show('quiz');renderProg();renderQ(0,false);}
-
-function renderProg(){
-  const tr=$('#ptrack');tr.innerHTML='';
-  for(let i=0;i<10;i++){
-    const d=document.createElement('div');d.className='pdot'+(answers[i]?' done':'')+(i===curQ?' now':'');d.textContent=i+1;tr.appendChild(d);
-    if(i<9){const l=document.createElement('div');l.className='pline'+(answers[i]?' done':'');tr.appendChild(l);}
-  }
-  $('#plabel').textContent=String(curQ+1).padStart(2,'0')+' / 10';
-}
-
-function renderQ(idx,leaving){
-  const q=questions[idx],area=$('#qarea'),sel=answers[idx];
-  const card=document.createElement('div');card.className='qcard';
-  card.innerHTML='<span class="q-eye">Question '+String(idx+1).padStart(2,'0')+' of 10</span><span class="q-num">'+String(idx+1).padStart(2,'0')+'</span><div class="q-zh">'+q.zh+'</div><span class="q-en">'+q.en+'</span><div class="opts">'+q.opts.map((o,oi)=>{const L=String.fromCharCode(65+oi),isSel=sel&&JSON.stringify(sel.c)===JSON.stringify(o.c);return'<div class="opt'+(isSel?' sel':'')+'" data-c="'+o.c.join(',')+'" data-t="'+o.t+'｜'+o.e+'" onclick="pick(this,'+idx+')"><input type="radio" name="q'+idx+'" '+(isSel?'checked':'')+'/><span class="opt-l">'+L+'</span><span class="opt-t">'+o.t+'<span class="opt-e">'+o.e+'</span></span></div>'}).join('')+'</div><div class="qnav"><button class="btn-n" onclick="nav(-1)" '+(idx===0?'disabled':'')+'>← 上一題</button>'+(idx<9?'<button class="btn-n pri" onclick="nav(1)" '+(sel?'':'disabled')+' id="btnNext">下一題 →</button>':'<button class="btn-n pri" onclick="goForm()" '+(sel?'':'disabled')+' id="btnNext">填寫資料 →</button>')+'</div>';
-  if(leaving){const old=area.querySelector('.qcard');if(old){old.classList.add('leaving');setTimeout(()=>{area.innerHTML='';area.appendChild(card);},260);}else{area.innerHTML='';area.appendChild(card);}}
-  else{area.innerHTML='';area.appendChild(card);}
-  updateCP();
-}
-
-function pick(el,idx){
-  $$('.opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');
-  const c=el.dataset.c.split(',').filter(Boolean);
-  if(answers[idx])answers[idx].c.forEach(x=>{if(scores[x]!==undefined)scores[x]--;});
-  answers[idx]={c,t:el.dataset.t};c.forEach(x=>{if(scores[x]!==undefined)scores[x]++;});
-  const btn=$('#btnNext');if(btn)btn.removeAttribute('disabled');
-  renderProg();updateCP();el.style.transform='scale(1.015)';setTimeout(()=>el.style.transform='',200);
-}
-function nav(d){const n=curQ+d;if(n<0||n>9)return;curQ=n;renderProg();renderQ(curQ,true);}
-function goForm(){if(answers.some(a=>!a)){const mi=answers.findIndex(a=>!a);toast('第 '+(mi+1)+' 題還沒選');curQ=mi;renderProg();renderQ(curQ,true);return;}submitQuiz();}
-let lastCpKey=null;
-function leadKey(){const mx=Math.max(...Object.values(scores));if(mx===0)return null;return Object.keys(scores).filter(k=>scores[k]===mx)[0];}
-function updateCP(){return;}
-
-function topKeys(sc){const mx=Math.max(...Object.values(sc));return Object.keys(sc).filter(k=>sc[k]===mx);}
-function primaryKey(sc){const mx=Math.max(...Object.values(sc));return ORDER.find(k=>sc[k]===mx)||ORDER[0];}
-function combinedProfile(keys){return profiles[(keys&&keys[0])||ORDER[0]];}
-function buildSummary(p){
-  return '【Keylume · Find Your Helori｜探索摘要】\n'
-    +'本測驗未收集個人資料。\n'
-    +'氣味起源：'+p.profile.type+'\n'
-    +'英文設定：'+p.profile.english+'\n'
-    +'Atlas No.：'+p.profile.atlasNo+'\n'
-    +'Origin：'+p.profile.origin+'\n'
-    +'Instrument：'+p.profile.instrument+'\n'
-    +'Scent Direction：'+p.profile.scentShort+'\n'
-    +'Taste：'+p.profile.taste+'\n'
-    +'分數統計：A='+p.scores.A+' / B='+p.scores.B+' / C='+p.scores.C+' / D='+p.scores.D+' / E='+p.scores.E+' / F='+p.scores.F+' / G='+p.scores.G;
-}
-
-const LINE_OA_ID='@hscent';
-function lineUrl(message){
-  return 'https://line.me/R/oaMessage/'+encodeURIComponent(LINE_OA_ID)+'/?'+encodeURIComponent(message.trim());
-}
-function setLineButtons(profile){
-  const base='我的 Helori 是：'+profile.type+'\\nOrigin：'+profile.origin+'\\n香氣方向：'+profile.scentShort+'\\n\\n';
-  const getMsg='我想索取我的 Helori 結果\\n\\n'+base+'請提供我的 Helori 結果與後續說明。';
-  const bookMsg='我想預約 Helori / 香氣課程\\n\\n'+base+'請協助我了解可預約的課程時間。';
-  const notifyMsg='開課請通知我\\n\\n'+base+'之後有 Helori 或香氣課程開課時，請通知我。';
-  const getBtn=document.getElementById('lineGetBtn');
-  const bookBtn=document.getElementById('lineBookBtn');
-  const notifyBtn=document.getElementById('lineNotifyBtn');
-  if(getBtn)getBtn.href=lineUrl(getMsg);
-  if(bookBtn)bookBtn.href=lineUrl(bookMsg);
-  if(notifyBtn)notifyBtn.href=lineUrl(notifyMsg);
-}
-
-function submitQuiz(){
-  const actualKey=primaryKey(scores);
-  const profile=profiles[actualKey];
-  const payload={
-    generatedAt:new Date().toISOString(),
-    answers:answers.map((a,i)=>({question:questions[i].zh,selected:a?a.t:'',codes:a?a.c:[]})),
-    scores,
-    profile,
-    privacy:'no-personal-data-collected'
-  };
-  $('#atlasNo').textContent='Atlas No. '+profile.atlasNo;
-  $('#resType').textContent=profile.type;
-  $('#resEn').textContent=profile.english;
-  $('#resultScentLine').textContent='香氣方向｜'+profile.scentShort;
-  $('#simpleResultText').textContent=profile.desc;
-  $('#resOrigin').textContent=profile.origin;
-  $('#resInstr').textContent=profile.instrument;
-  $('#resScent').textContent=profile.scentShort;
-  $('#resTaste').textContent=profile.taste;
-  $('#tagRow').innerHTML=profile.tags.map(t=>'<span class="tag">'+t+'</span>').join('');
-  $('#rDesc').textContent=profile.desc;
-  $('#rFam').textContent=profile.families;
-  $('#rMat').textContent=profile.materials;
-  $('#rForm').textContent=profile.formula;
-  $('#rAdv').textContent=profile.advice;
-  window.currentAtlasPayload=payload;
-  window.currentAtlasKey=actualKey;
-  const rimg=$('#resimg');
-  stopCycle();
-  rimg.src=getCorrectAvatar(actualKey);
-  rimg.style.top='auto';
-  rimg.style.left='auto';
-  const mx=Math.max(...Object.values(scores));
-  $('#scoreGrid').innerHTML=ORDER.map(k=>'<div class="sc'+(scores[k]===mx?' top':'')+'"><span class="sc-k">'+k+'</span><span class="sc-ch">'+CM[k].name+'</span><span class="sc-n">'+scores[k]+'</span></div>').join('');
-  $('#summaryBox').textContent=buildSummary(payload);
-  const notice=document.getElementById('submitNotice');
-  if(notice)notice.textContent='本測驗不收集個人資料。若想讓 Hana 老師知道結果，請點擊 LINE 按鈕並自行送出訊息。';
-  setLineButtons(profile);
-  show('result');
-}
-
-$('#copyBtn').addEventListener('click',async()=>{try{await navigator.clipboard.writeText($('#summaryBox').textContent);toast('摘要已複製');}catch{toast('請手動選取複製');}});
-
-function loadCardImage(src){
-  return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=reject;img.src=src;});
-}
-function wrapCanvasText(ctx,text,x,y,maxWidth,lineHeight,maxLines){
-  const raw=String(text||'').replace(/\n/g,' ').trim();
-  const units=[];
-  raw.split(/(\s+)/).forEach(part=>{
-    if(!part)return;
-    if(/^\s+$/.test(part)){units.push(part);return;}
-    if(/[\u3400-\u9FFF]/.test(part)){
-      for(const ch of part)units.push(ch);
-    }else{
-      units.push(part);
-    }
-  });
-  let line='',lines=[];
-  for(const u of units){
-    const test=line+u;
-    if(ctx.measureText(test).width>maxWidth && line){lines.push(line.trim());line=u.trimStart();}
-    else line=test;
-  }
-  if(line.trim())lines.push(line.trim());
-  if(maxLines&&lines.length>maxLines){lines=lines.slice(0,maxLines);lines[lines.length-1]=lines[lines.length-1].replace(/…?$/,'')+'…';}
-  for(const ln of lines){ctx.fillText(ln,x,y);y+=lineHeight;}
-  return y;
-}
-const DOWNLOAD_CARD_FILES = {
-  A: "download_cards/misti.jpg",
-  B: "download_cards/flori.jpg",
-  C: "download_cards/velmo.jpg",
-  D: "download_cards/ambra.jpg",
-  E: "download_cards/nocta.jpg",
-  F: "download_cards/tealu.jpg",
-  G: "download_cards/mossi.jpg"
-};
-
-async function downloadAtlasCard(){
-  const payload=window.currentAtlasPayload;
-  if(!payload||!payload.profile){toast('請先完成測驗');return;}
-  const p=payload.profile, key=window.currentAtlasKey||'A';
-  const href=DOWNLOAD_CARD_FILES[key];
-  if(!href){toast('找不到對應的圖鑑卡');return;}
-  try{
-    const res=await fetch(href,{cache:'no-store'});
-    if(!res.ok) throw new Error('HTTP '+res.status+' '+href);
-    const blob=await res.blob();
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.download='helori_atlas_'+(p.short||'result').toLowerCase()+'.jpg';
-    a.href=url;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(()=>URL.revokeObjectURL(url),800);
-    toast('圖鑑卡已下載');
-  }catch(err){
-    console.error(err);
-    window.open(href,'_blank');
-    toast('無法自動下載，已嘗試開啟圖鑑卡');
-  }
-}
-
-const downloadCardButton=document.getElementById('downloadCardBtn');if(downloadCardButton){downloadCardButton.addEventListener('click',downloadAtlasCard);}
-$('#printBtn').addEventListener('click',()=>window.print());
-$('#resetBtn').addEventListener('click',()=>{stopCycle();answers=new Array(10).fill(null);scores={A:0,B:0,C:0,D:0,E:0,F:0,G:0};curQ=0;lastCpKey=null;show('landing');});
-
-function buildParticles(){const ct=$('#particles'),shapes=['<svg width="10" height="14" viewBox="0 0 10 14"><ellipse cx="5" cy="7" rx="3.5" ry="5.5" fill="none" stroke="#b8883c" stroke-width="1" transform="rotate(-18,5,7)"/></svg>','<svg width="10" height="10" viewBox="0 0 10 10"><rect x="1" y="1" width="8" height="8" fill="none" stroke="#b8883c" stroke-width="1" transform="rotate(45,5,5)"/></svg>','<svg width="14" height="5" viewBox="0 0 14 5"><path d="M0,2.5 Q3.5,0 7,2.5 Q10.5,5 14,2.5" fill="none" stroke="#b8883c" stroke-width="1"/></svg>','<svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="none" stroke="#b8883c" stroke-width="1"/></svg>'];for(let i=0;i<16;i++){const p=document.createElement('div');p.className='pt';p.innerHTML=shapes[i%4];p.style.left=(Math.random()*100)+'vw';p.style.animationDuration=(20+Math.random()*18)+'s';p.style.animationDelay=(Math.random()*22)+'s';p.style.transform='scale('+(0.5+Math.random()*0.7)+')';ct.appendChild(p);}}
-
-window.startQuiz=startQuiz;
-const startButton=document.querySelector('.btn-start');
-if(startButton){startButton.addEventListener('click',startQuiz);}
-buildLanding();buildParticles();show('landing');
-
+let qIndex=0,answers=new Array(questions.length).fill(null),scores={A:0,B:0,C:0,D:0,E:0,F:0,G:0};
+const $=s=>document.querySelector(s);
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$('#'+id).classList.add('active');scrollTo({top:0,behavior:'smooth'})}
+function buildLanding(){$('#constellation').innerHTML=order.map(k=>`<div class="mini"><div class="avatar"><img src="${imgs[k]}" alt="${names[k]}"></div><span>${names[k]}</span></div>`).join('')}
+function startQuiz(){qIndex=0;show('quiz');renderQuestion()}
+function renderQuestion(){const q=questions[qIndex],selected=answers[qIndex];$('#counter').textContent=String(qIndex+1).padStart(2,'0')+' / '+questions.length;$('#barFill').style.width=(qIndex/questions.length*100)+'%';$('#questionCard').innerHTML=`<div class="q-no">${String(qIndex+1).padStart(2,'0')}</div><div class="q-zh">${q.zh}</div><div class="q-en">${q.en}</div><div class="opts">${q.opts.map((o,i)=>`<button class="opt ${selected&&selected.i===i?'selected':''}" data-i="${i}"><b>${String.fromCharCode(65+i)}</b>${o[0]}<small>${o[1]}</small></button>`).join('')}</div><div class="nav"><button class="btn" id="prevBtn" ${qIndex===0?'disabled':''}>上一題</button><button class="btn primary" id="nextBtn" ${selected?'':'disabled'}>${qIndex===questions.length-1?'查看結果':'下一題'}</button></div>`;document.querySelectorAll('.opt').forEach(btn=>btn.addEventListener('click',()=>selectOption(Number(btn.dataset.i))));$('#prevBtn').addEventListener('click',()=>{if(qIndex>0){qIndex--;renderQuestion()}});$('#nextBtn').addEventListener('click',()=>{if(qIndex<questions.length-1){qIndex++;renderQuestion()}else showResult()})}
+function selectOption(i){answers[qIndex]={i,codes:questions[qIndex].opts[i][2]};renderQuestion()}
+function calculate(){scores={A:0,B:0,C:0,D:0,E:0,F:0,G:0};answers.forEach(a=>{if(a)a.codes.forEach(k=>scores[k]++)});return order.reduce((best,k)=>scores[k]>scores[best]?k:best,'A')}
+function showResult(){if(answers.some(a=>!a)){toast('還有題目未完成');return}const key=calculate(),p=profiles[key];currentProfile=p;$('#barFill').style.width='100%';$('#resImg').src=imgs[key];$('#atlasNo').textContent='Atlas No. 0'+(order.indexOf(key)+1);$('#resName').textContent=p.type;$('#resEn').textContent=p.en;$('#scentLine').textContent='香氣方向｜'+p.scent;$('#resDesc').textContent=p.desc;$('#origin').textContent=p.origin;$('#instrument').textContent=p.instrument;$('#families').textContent=p.families;$('#materials').textContent=p.materials;show('result')}
+function resultMessage(){return currentProfile?`我想了解 Helori 調香課程。
+我的 Helori 是：${currentProfile.type}
+Origin：${currentProfile.origin}
+香氣方向：${currentProfile.scent}`:''}
+function oaMessageUrl(text){return `https://line.me/R/oaMessage/${encodeURIComponent(LINE_OA_ID)}/?${encodeURIComponent(text)}`}
+async function sendToLine(){const text=resultMessage();if(!text){toast('請先完成測驗');return}try{if(window.liff&&liffReady&&liff.isInClient()){await liff.sendMessages([{type:'text',text}]);toast('已送出，請回到 LINE 聊天室查看');setTimeout(()=>{try{liff.closeWindow()}catch(e){}},700);return}location.href=oaMessageUrl(text)}catch(e){console.warn(e);toast('無法直接送出，改開 LINE 官方帳號');setTimeout(()=>location.href=oaMessageUrl(text),600)}}
+async function shareQuiz(){const text=`我剛剛完成 Find Your Helori 測驗。
+來看看你的氣味角色是哪一位：
+${LIFF_URL}`;try{if(window.liff&&liffReady&&liff.isInClient()&&liff.isApiAvailable('shareTargetPicker')){await liff.shareTargetPicker([{type:'text',text}]);toast('已開啟分享');return}await navigator.clipboard.writeText(text);toast('分享文字已複製')}catch(e){try{await navigator.clipboard.writeText(text);toast('分享文字已複製')}catch(err){alert(text)}}}
+async function initLiff(){try{if(window.liff){await liff.init({liffId:LIFF_ID});liffReady=true}}catch(e){console.warn('LIFF init failed',e)}}
+$('#startBtn').addEventListener('click',startQuiz);
+$('#shareBtn').addEventListener('click',shareQuiz);
+$('#courseBtn').addEventListener('click',sendToLine);
+$('#resetBtn').addEventListener('click',()=>{answers=new Array(questions.length).fill(null);scores={A:0,B:0,C:0,D:0,E:0,F:0,G:0};currentProfile=null;show('landing')});
+buildLanding();initLiff();
 </script>
 </body>
 </html>
