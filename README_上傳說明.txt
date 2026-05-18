@@ -6,7 +6,7 @@ Find Your Helori｜上傳說明
 1. 文案改為：找到專屬你的 Helori
 2. 首頁品牌列：Hana's Scent Artist / H.FUGUE ATELIER
 3. 結果頁保留 3 個主按鈕：
-   - 加入 LINE 索取完整結果
+   - 將我的 Helori 傳送到 LINE
    - 分享給朋友測測看
    - 我想了解 Helori 調香課程
 4. 頁尾小字：
