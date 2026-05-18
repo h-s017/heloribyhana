@@ -67,12 +67,12 @@
         <p class="scent-line" id="scentLine"></p>
         <p class="desc" id="resDesc"></p>
         <div class="actions">
-          <a class="btn primary" id="addFriendBtn" href="https://line.me/R/ti/p/@hscent" target="_blank" rel="noopener">將我的 Helori 傳送到 LINE</a>
+          <button class="btn primary" id="sendResultBtn" type="button">將我的 Helori 傳送到 LINE</button>
           <button class="btn" id="shareBtn">分享給朋友測測看</button>
           <button class="btn" id="courseBtn">我想了解 Helori 調香課程</button>
           <button class="btn ghost" id="resetBtn">重新測驗</button>
         </div>
-        <p class="hint">請點「將我的 Helori 傳送到 LINE」。若尚未加入官方帳號，請先加入後再送出預填訊息。</p>
+        <p class="hint">請點「將我的 Helori 傳送到 LINE」。若尚未加入官方帳號，LINE 會引導加入；若官方帳號沒有設定自動回覆，訊息送出後不會自動跳出內容。</p>
       </div>
       <div class="detail">
         <div class="box"><h3>Origin</h3><p id="origin"></p></div>
@@ -122,7 +122,19 @@ function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.re
 function buildLanding(){$('#constellation').innerHTML=order.map(k=>`<div class="mini"><div class="avatar"><img src="${imgs[k]}" alt="${names[k]}"></div><span>${names[k]}</span></div>`).join('')}
 function startQuiz(){qIndex=0;show('quiz');renderQuestion()}
 function renderQuestion(){const q=questions[qIndex],selected=answers[qIndex];$('#counter').textContent=String(qIndex+1).padStart(2,'0')+' / '+questions.length;$('#barFill').style.width=(qIndex/questions.length*100)+'%';$('#questionCard').innerHTML=`<div class="q-no">${String(qIndex+1).padStart(2,'0')}</div><div class="q-zh">${q.zh}</div><div class="q-en">${q.en}</div><div class="opts">${q.opts.map((o,i)=>`<button class="opt ${selected&&selected.i===i?'selected':''}" data-i="${i}"><b>${String.fromCharCode(65+i)}</b>${o[0]}<small>${o[1]}</small></button>`).join('')}</div><div class="nav"><button class="btn" id="prevBtn" ${qIndex===0?'disabled':''}>上一題</button><button class="btn primary" id="nextBtn" ${selected?'':'disabled'}>${qIndex===questions.length-1?'查看結果':'下一題'}</button></div>`;document.querySelectorAll('.opt').forEach(btn=>btn.addEventListener('click',()=>selectOption(Number(btn.dataset.i))));$('#prevBtn').addEventListener('click',()=>{if(qIndex>0){qIndex--;renderQuestion()}});$('#nextBtn').addEventListener('click',()=>{if(qIndex<questions.length-1){qIndex++;renderQuestion()}else showResult()})}
-function selectOption(i){answers[qIndex]={i,codes:questions[qIndex].opts[i][2]};renderQuestion()}
+function selectOption(i){
+  answers[qIndex]={i,codes:questions[qIndex].opts[i][2]};
+  renderQuestion();
+
+  setTimeout(()=>{
+    if(qIndex < questions.length - 1){
+      qIndex++;
+      renderQuestion();
+    }else{
+      showResult();
+    }
+  },220);
+}
 function calculate(){scores={A:0,B:0,C:0,D:0,E:0,F:0,G:0};answers.forEach(a=>{if(a)a.codes.forEach(k=>scores[k]++)});return order.reduce((best,k)=>scores[k]>scores[best]?k:best,'A')}
 function showResult(){if(answers.some(a=>!a)){toast('還有題目未完成');return}const key=calculate(),p=profiles[key];currentProfile=p;$('#barFill').style.width='100%';$('#resImg').src=imgs[key];$('#atlasNo').textContent='Atlas No. 0'+(order.indexOf(key)+1);$('#resName').textContent=p.type;$('#resEn').textContent=p.en;$('#scentLine').textContent='香氣方向｜'+p.scent;$('#resDesc').textContent=p.desc;$('#origin').textContent=p.origin;$('#instrument').textContent=p.instrument;$('#families').textContent=p.families;$('#materials').textContent=p.materials;show('result')}
 function resultMessage(){return currentProfile?`我想了解 Helori 調香課程。
@@ -136,8 +148,10 @@ async function shareQuiz(){const text=`我剛剛完成 Find Your Helori 測驗�
 ${LIFF_URL}`;try{if(window.liff&&liffReady&&liff.isInClient()&&liff.isApiAvailable('shareTargetPicker')){await liff.shareTargetPicker([{type:'text',text}]);toast('已開啟分享');return}await navigator.clipboard.writeText(text);toast('分享文字已複製')}catch(e){try{await navigator.clipboard.writeText(text);toast('分享文字已複製')}catch(err){alert(text)}}}
 async function initLiff(){try{if(window.liff){await liff.init({liffId:LIFF_ID});liffReady=true}}catch(e){console.warn('LIFF init failed',e)}}
 $('#startBtn').addEventListener('click',startQuiz);
+const sendResultBtn=document.getElementById('sendResultBtn');
+if(sendResultBtn) sendResultBtn.addEventListener('click',()=>sendToLine('result'));
 $('#shareBtn').addEventListener('click',shareQuiz);
-$('#courseBtn').addEventListener('click',sendToLine);
+$('#courseBtn').addEventListener('click',()=>sendToLine('course'));
 $('#resetBtn').addEventListener('click',()=>{answers=new Array(questions.length).fill(null);scores={A:0,B:0,C:0,D:0,E:0,F:0,G:0};currentProfile=null;show('landing')});
 buildLanding();initLiff();
 </script>
