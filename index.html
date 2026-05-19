@@ -35,6 +35,12 @@
     .badge{display:inline-block;border:1px solid #555;border-radius:999px;padding:5px 14px;font-family:"Cormorant Garamond",serif;letter-spacing:.18em;text-transform:uppercase;font-size:11px;color:#444;margin-bottom:12px}.res-name{font-family:"Cormorant Garamond",serif;font-size:clamp(36px,7vw,58px);line-height:1.1;margin-bottom:2px}.res-en{font-family:"Cormorant Garamond",serif;font-style:italic;color:#666;margin:6px 0 16px;font-size:18px}.scent-line{color:#555;margin-bottom:12px}.desc{max-width:560px;margin:0 auto 22px;color:#3e3e3e;line-height:2}
     .actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:18px 0 12px}.hint{font-size:13px;color:#666;line-height:1.8;margin:0 auto 20px;max-width:580px}.detail{max-width:760px;margin:18px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:left}.box{border:1px solid var(--light);border-radius:18px;padding:18px;background:#fff}.box.full{grid-column:1/-1}.box h3{font-family:"Cormorant Garamond",serif;text-transform:uppercase;letter-spacing:.16em;font-size:12px;color:#555;margin-bottom:8px}.box p{color:#444;font-size:14px;white-space:pre-line}
     .footer-brand{margin:28px auto 0;text-align:center;font-family:"Cormorant Garamond",serif;letter-spacing:.14em;text-transform:uppercase;color:#777;font-size:12px}.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(12px);opacity:0;background:#202020;color:#fff;padding:11px 20px;border-radius:999px;transition:.2s;z-index:10;max-width:86vw;text-align:center}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    .follow-panel{max-width:760px;margin:18px auto 0;border:1.5px solid var(--line);border-radius:var(--r);padding:22px;text-align:center;background:#fff}
+    .follow-panel h3{font-family:"Cormorant Garamond",serif;letter-spacing:.16em;text-transform:uppercase;font-size:14px;color:#555;margin-bottom:8px}
+    .follow-panel p{font-size:14px;color:#555;line-height:1.8;margin-bottom:14px}
+    .follow-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+
     @media(max-width:760px){.brand{font-size:10px;align-items:flex-start}.constellation{grid-template-columns:repeat(4,1fr);gap:13px}.mini span{font-size:10px}.detail{grid-template-columns:1fr}.nav{flex-direction:column-reverse}.nav button,.actions a,.actions button{width:100%}}
   </style>
 </head>
@@ -46,7 +52,7 @@
       <div class="eyebrow">Keylume · Helori Origin Atlas</div>
       <h1>Find Your<br><em>Helori</em></h1>
       <div class="subtitle">找到專屬你的 Helori</div>
-      <p class="lead">遠古時代就存在的神祕生物，這個世界氣味的源頭，Helori，正在等待尋找他的人。</p>
+      <p class="lead">遠古時代就存在的神祕生物，這個世界氣味的源頭，Helori，正在等待尋找他的人。測驗完成後，可回到官方 LINE 查看結果，並追蹤 IG 取得後續課程與香氣創作。</p>
       <div class="constellation" id="constellation"></div>
       <div class="pills"><span class="pill">10 個場景選擇</span><span class="pill">LINE 索取完整結果</span><span class="pill">可分享給朋友</span></div>
       <button class="btn primary big" id="startBtn">Find Your Helori</button>
@@ -67,12 +73,22 @@
         <p class="scent-line" id="scentLine"></p>
         <p class="desc" id="resDesc"></p>
         <div class="actions">
-          <button class="btn primary" id="sendResultBtn" type="button">將我的 Helori 傳送到 LINE</button>
+          <button class="btn primary" id="sendResultBtn" type="button">回官方 LINE 查看結果</button>
           <button class="btn" id="shareBtn">分享給朋友測測看</button>
           <button class="btn" id="courseBtn">我想了解 Helori 調香課程</button>
+          <a class="btn ghost" href="https://www.hanascent.com/" target="_blank" rel="noopener">前往官網</a>
           <button class="btn ghost" id="resetBtn">重新測驗</button>
         </div>
-        <p class="hint">請點「將我的 Helori 傳送到 LINE」。系統會嘗試傳送你的結果圖片與文字；若尚未加入官方帳號，LINE 會引導加入。若尚未加入官方帳號，LINE 會引導加入；若官方帳號沒有設定自動回覆，訊息送出後不會自動跳出內容。</p>
+        <p class="hint">請從 Hana's Scent Artist 官方 LINE 內開啟此測驗。點「回官方 LINE 查看結果」後，系統會嘗試把你的 Helori 圖片與結果送回官方 LINE 聊天室；若不是從官方 LINE 內開啟，將改用官方帳號預填訊息。</p>
+      </div>
+      <div class="follow-panel">
+        <h3>Follow & Continue</h3>
+        <p>想保留結果、收到開課通知，請回到官方 LINE；想看更多香氣創作與課程紀錄，請追蹤 IG。</p>
+        <div class="follow-actions">
+          <button class="btn primary" id="lineFollowBtn" type="button">回官方 LINE</button>
+          <a class="btn" id="igFollowBtn" href="https://www.instagram.com/hanascent.artist/" target="_blank" rel="noopener">追蹤 IG</a>
+          <a class="btn ghost" href="https://www.hanascent.com/" target="_blank" rel="noopener">前往官網</a>
+        </div>
       </div>
       <div class="detail">
         <div class="box"><h3>Origin</h3><p id="origin"></p></div>
@@ -89,6 +105,7 @@
 const LIFF_ID='2010125170-LLEvROMg';
 const LIFF_URL='https://liff.line.me/2010125170-LLEvROMg';
 const LINE_OA_ID='@hscent';
+const IG_URL='https://www.instagram.com/hanascent.artist/';
 let liffReady=false,currentProfile=null,currentKey=null;
 const BASE='https://h-s017.github.io/heloribyhana/';
 const imgs={A:BASE+'assets/avatars/misti.jpg',B:BASE+'assets/avatars/flori.jpg',C:BASE+'assets/avatars/velmo.jpg',D:BASE+'assets/avatars/ambra.jpg',E:BASE+'assets/avatars/nocta.jpg',F:BASE+'assets/avatars/tealu.jpg',G:BASE+'assets/avatars/mossi.jpg'};
@@ -138,8 +155,8 @@ function selectOption(i){
 function calculate(){scores={A:0,B:0,C:0,D:0,E:0,F:0,G:0};answers.forEach(a=>{if(a)a.codes.forEach(k=>scores[k]++)});return order.reduce((best,k)=>scores[k]>scores[best]?k:best,'A')}
 function showResult(){if(answers.some(a=>!a)){toast('還有題目未完成');return}const key=calculate(),p=profiles[key];currentProfile=p;currentKey=key;$('#barFill').style.width='100%';$('#resImg').src=imgs[key];$('#atlasNo').textContent='Atlas No. 0'+(order.indexOf(key)+1);$('#resName').textContent=p.type;$('#resEn').textContent=p.en;$('#scentLine').textContent='香氣方向｜'+p.scent;$('#resDesc').textContent=p.desc;$('#origin').textContent=p.origin;$('#instrument').textContent=p.instrument;$('#families').textContent=p.families;$('#materials').textContent=p.materials;show('result')}
 function currentImageUrl(){
-  const cardMap={A:'misti.jpg',B:'flori.jpg',C:'velmo.jpg',D:'ambra.jpg',E:'nocta.jpg',F:'tealu.jpg',G:'mossi.jpg'};
-  return currentKey&&cardMap[currentKey] ? `${BASE}download_cards/${cardMap[currentKey]}` : '';
+  const avatarMap={A:'misti.jpg',B:'flori.jpg',C:'velmo.jpg',D:'ambra.jpg',E:'nocta.jpg',F:'tealu.jpg',G:'mossi.jpg'};
+  return currentKey&&avatarMap[currentKey] ? `${BASE}assets/avatars/${avatarMap[currentKey]}` : '';
 }
 
 function resultMessage(intent='result'){
@@ -186,7 +203,7 @@ async function sendToLine(intent='result'){
     location.href=oaMessageUrl(text + (imageUrl ? `\n${imageUrl}` : ''));
   }catch(e){
     console.warn(e);
-    toast('無法直接送出圖片，改開 LINE 官方帳號');
+    toast('無法直接送回官方 LINE，改開官方帳號');
     setTimeout(()=>location.href=oaMessageUrl(text + (imageUrl ? `\n${imageUrl}` : '')),600);
   }
 }
@@ -242,6 +259,8 @@ const sendResultBtn=document.getElementById('sendResultBtn');
 if(sendResultBtn) sendResultBtn.addEventListener('click',()=>sendToLine('result'));
 $('#shareBtn').addEventListener('click',shareQuiz);
 $('#courseBtn').addEventListener('click',()=>sendToLine('course'));
+const lineFollowBtn=document.getElementById('lineFollowBtn');
+if(lineFollowBtn) lineFollowBtn.addEventListener('click',()=>sendToLine('result'));
 $('#resetBtn').addEventListener('click',()=>{answers=new Array(questions.length).fill(null);scores={A:0,B:0,C:0,D:0,E:0,F:0,G:0};currentProfile=null;currentKey=null;show('landing')});
 buildLanding();initLiff();
 </script>
