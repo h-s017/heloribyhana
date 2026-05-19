@@ -89,7 +89,7 @@
 const LIFF_ID='2010125170-LLEvROMg';
 const LIFF_URL='https://liff.line.me/2010125170-LLEvROMg';
 const LINE_OA_ID='@hscent';
-let liffReady=false,currentProfile=null;
+let liffReady=false,currentProfile=null,currentKey=null;
 const BASE='https://h-s017.github.io/heloribyhana/';
 const imgs={A:BASE+'assets/avatars/misti.jpg',B:BASE+'assets/avatars/flori.jpg',C:BASE+'assets/avatars/velmo.jpg',D:BASE+'assets/avatars/ambra.jpg',E:BASE+'assets/avatars/nocta.jpg',F:BASE+'assets/avatars/tealu.jpg',G:BASE+'assets/avatars/mossi.jpg'};
 const names={A:'Misti',B:'Flori',C:'Velmo',D:'Ambra',E:'Nocta',F:'Tealu',G:'Mossi'};
@@ -136,23 +136,65 @@ function selectOption(i){
   },220);
 }
 function calculate(){scores={A:0,B:0,C:0,D:0,E:0,F:0,G:0};answers.forEach(a=>{if(a)a.codes.forEach(k=>scores[k]++)});return order.reduce((best,k)=>scores[k]>scores[best]?k:best,'A')}
-function showResult(){if(answers.some(a=>!a)){toast('還有題目未完成');return}const key=calculate(),p=profiles[key];currentProfile=p;$('#barFill').style.width='100%';$('#resImg').src=imgs[key];$('#atlasNo').textContent='Atlas No. 0'+(order.indexOf(key)+1);$('#resName').textContent=p.type;$('#resEn').textContent=p.en;$('#scentLine').textContent='香氣方向｜'+p.scent;$('#resDesc').textContent=p.desc;$('#origin').textContent=p.origin;$('#instrument').textContent=p.instrument;$('#families').textContent=p.families;$('#materials').textContent=p.materials;show('result')}
+function showResult(){if(answers.some(a=>!a)){toast('還有題目未完成');return}const key=calculate(),p=profiles[key];currentProfile=p;currentKey=key;$('#barFill').style.width='100%';$('#resImg').src=imgs[key];$('#atlasNo').textContent='Atlas No. 0'+(order.indexOf(key)+1);$('#resName').textContent=p.type;$('#resEn').textContent=p.en;$('#scentLine').textContent='香氣方向｜'+p.scent;$('#resDesc').textContent=p.desc;$('#origin').textContent=p.origin;$('#instrument').textContent=p.instrument;$('#families').textContent=p.families;$('#materials').textContent=p.materials;show('result')}
 function resultMessage(){return currentProfile?`我想了解 Helori 調香課程。
 我的 Helori 是：${currentProfile.type}
 Origin：${currentProfile.origin}
 香氣方向：${currentProfile.scent}`:''}
 function oaMessageUrl(text){return `https://line.me/R/oaMessage/${encodeURIComponent(LINE_OA_ID)}/?${encodeURIComponent(text)}`}
 async function sendToLine(){const text=resultMessage();if(!text){toast('請先完成測驗');return}try{if(window.liff&&liffReady&&liff.isInClient()){await liff.sendMessages([{type:'text',text}]);toast('已送出，請回到 LINE 聊天室查看');setTimeout(()=>{try{liff.closeWindow()}catch(e){}},700);return}location.href=oaMessageUrl(text)}catch(e){console.warn(e);toast('無法直接送出，改開 LINE 官方帳號');setTimeout(()=>location.href=oaMessageUrl(text),600)}}
-async function shareQuiz(){const text=`我剛剛完成 Find Your Helori 測驗。
+async function shareQuiz(){
+  const p=currentProfile;
+  const key=currentKey;
+  const text=p
+    ? `我測出我的 Helori 是：${p.type}
+你也來找出專屬你的 Helori：
+${LIFF_URL}`
+    : `我剛剛完成 Find Your Helori 測驗。
 來看看你的氣味角色是哪一位：
-${LIFF_URL}`;try{if(window.liff&&liffReady&&liff.isInClient()&&liff.isApiAvailable('shareTargetPicker')){await liff.shareTargetPicker([{type:'text',text}]);toast('已開啟分享');return}await navigator.clipboard.writeText(text);toast('分享文字已複製')}catch(e){try{await navigator.clipboard.writeText(text);toast('分享文字已複製')}catch(err){alert(text)}}}
+${LIFF_URL}`;
+
+  const cardMap={A:'misti.jpg',B:'flori.jpg',C:'velmo.jpg',D:'ambra.jpg',E:'nocta.jpg',F:'tealu.jpg',G:'mossi.jpg'};
+  const imageUrl=key&&cardMap[key] ? `${BASE}download_cards/${cardMap[key]}` : '';
+
+  try{
+    if(window.liff&&liffReady&&liff.isInClient()&&liff.isApiAvailable('shareTargetPicker')){
+      const messages=[];
+      if(imageUrl){
+        messages.push({
+          type:'image',
+          originalContentUrl:imageUrl,
+          previewImageUrl:imageUrl
+        });
+      }
+      messages.push({type:'text',text});
+      await liff.shareTargetPicker(messages);
+      toast('已開啟分享');
+      return;
+    }
+
+    await navigator.clipboard.writeText(text + (imageUrl ? `
+${imageUrl}` : ''));
+    toast('分享文字與圖片連結已複製');
+  }catch(e){
+    console.warn(e);
+    try{
+      await navigator.clipboard.writeText(text + (imageUrl ? `
+${imageUrl}` : ''));
+      toast('分享文字與圖片連結已複製');
+    }catch(err){
+      alert(text + (imageUrl ? `
+${imageUrl}` : ''));
+    }
+  }
+}
 async function initLiff(){try{if(window.liff){await liff.init({liffId:LIFF_ID});liffReady=true}}catch(e){console.warn('LIFF init failed',e)}}
 $('#startBtn').addEventListener('click',startQuiz);
 const sendResultBtn=document.getElementById('sendResultBtn');
 if(sendResultBtn) sendResultBtn.addEventListener('click',()=>sendToLine('result'));
 $('#shareBtn').addEventListener('click',shareQuiz);
 $('#courseBtn').addEventListener('click',()=>sendToLine('course'));
-$('#resetBtn').addEventListener('click',()=>{answers=new Array(questions.length).fill(null);scores={A:0,B:0,C:0,D:0,E:0,F:0,G:0};currentProfile=null;show('landing')});
+$('#resetBtn').addEventListener('click',()=>{answers=new Array(questions.length).fill(null);scores={A:0,B:0,C:0,D:0,E:0,F:0,G:0};currentProfile=null;currentKey=null;show('landing')});
 buildLanding();initLiff();
 </script>
 </body>
