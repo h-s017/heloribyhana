@@ -72,7 +72,7 @@
           <button class="btn" id="courseBtn">我想了解 Helori 調香課程</button>
           <button class="btn ghost" id="resetBtn">重新測驗</button>
         </div>
-        <p class="hint">請點「將我的 Helori 傳送到 LINE」。若尚未加入官方帳號，LINE 會引導加入；若官方帳號沒有設定自動回覆，訊息送出後不會自動跳出內容。</p>
+        <p class="hint">請點「將我的 Helori 傳送到 LINE」。系統會嘗試傳送你的結果圖片與文字；若尚未加入官方帳號，LINE 會引導加入。若尚未加入官方帳號，LINE 會引導加入；若官方帳號沒有設定自動回覆，訊息送出後不會自動跳出內容。</p>
       </div>
       <div class="detail">
         <div class="box"><h3>Origin</h3><p id="origin"></p></div>
@@ -137,12 +137,60 @@ function selectOption(i){
 }
 function calculate(){scores={A:0,B:0,C:0,D:0,E:0,F:0,G:0};answers.forEach(a=>{if(a)a.codes.forEach(k=>scores[k]++)});return order.reduce((best,k)=>scores[k]>scores[best]?k:best,'A')}
 function showResult(){if(answers.some(a=>!a)){toast('還有題目未完成');return}const key=calculate(),p=profiles[key];currentProfile=p;currentKey=key;$('#barFill').style.width='100%';$('#resImg').src=imgs[key];$('#atlasNo').textContent='Atlas No. 0'+(order.indexOf(key)+1);$('#resName').textContent=p.type;$('#resEn').textContent=p.en;$('#scentLine').textContent='香氣方向｜'+p.scent;$('#resDesc').textContent=p.desc;$('#origin').textContent=p.origin;$('#instrument').textContent=p.instrument;$('#families').textContent=p.families;$('#materials').textContent=p.materials;show('result')}
-function resultMessage(){return currentProfile?`我想了解 Helori 調香課程。
+function currentImageUrl(){
+  const cardMap={A:'misti.jpg',B:'flori.jpg',C:'velmo.jpg',D:'ambra.jpg',E:'nocta.jpg',F:'tealu.jpg',G:'mossi.jpg'};
+  return currentKey&&cardMap[currentKey] ? `${BASE}download_cards/${cardMap[currentKey]}` : '';
+}
+
+function resultMessage(intent='result'){
+  if(!currentProfile) return '';
+  if(intent === 'course'){
+    return `我想了解 Helori 調香課程。
 我的 Helori 是：${currentProfile.type}
 Origin：${currentProfile.origin}
-香氣方向：${currentProfile.scent}`:''}
-function oaMessageUrl(text){return `https://line.me/R/oaMessage/${encodeURIComponent(LINE_OA_ID)}/?${encodeURIComponent(text)}`}
-async function sendToLine(){const text=resultMessage();if(!text){toast('請先完成測驗');return}try{if(window.liff&&liffReady&&liff.isInClient()){await liff.sendMessages([{type:'text',text}]);toast('已送出，請回到 LINE 聊天室查看');setTimeout(()=>{try{liff.closeWindow()}catch(e){}},700);return}location.href=oaMessageUrl(text)}catch(e){console.warn(e);toast('無法直接送出，改開 LINE 官方帳號');setTimeout(()=>location.href=oaMessageUrl(text),600)}}
+香氣方向：${currentProfile.scent}`;
+  }
+  return `我想索取完整 Helori 結果。
+我的 Helori 是：${currentProfile.type}
+Origin：${currentProfile.origin}
+香氣方向：${currentProfile.scent}`;
+}
+
+function oaMessageUrl(text){
+  return `https://line.me/R/oaMessage/${encodeURIComponent(LINE_OA_ID)}/?${encodeURIComponent(text)}`;
+}
+
+async function sendToLine(intent='result'){
+  const text=resultMessage(intent);
+  const imageUrl=currentImageUrl();
+
+  if(!text){toast('請先完成測驗');return}
+
+  try{
+    if(window.liff&&liffReady&&liff.isInClient()){
+      const messages=[];
+      if(imageUrl){
+        messages.push({
+          type:'image',
+          originalContentUrl:imageUrl,
+          previewImageUrl:imageUrl
+        });
+      }
+      messages.push({type:'text',text});
+      await liff.sendMessages(messages);
+      toast('已送出圖片與結果，請回到 LINE 聊天室查看');
+      setTimeout(()=>{try{liff.closeWindow()}catch(e){}},700);
+      return;
+    }
+
+    location.href=oaMessageUrl(text + (imageUrl ? `\n${imageUrl}` : ''));
+  }catch(e){
+    console.warn(e);
+    toast('無法直接送出圖片，改開 LINE 官方帳號');
+    setTimeout(()=>location.href=oaMessageUrl(text + (imageUrl ? `\n${imageUrl}` : '')),600);
+  }
+}
+
 async function shareQuiz(){
   const p=currentProfile;
   const key=currentKey;
