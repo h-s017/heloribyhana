@@ -73,7 +73,7 @@
         <p class="scent-line" id="scentLine"></p>
         <p class="desc" id="resDesc"></p>
         <div class="actions">
-          <button class="btn primary" id="sendResultBtn" type="button">回官方 LINE 查看結果</button>
+          <button class="btn primary" id="sendResultBtn" type="button">回官方 LINE 查看完整檔案</button>
           <button class="btn" id="shareBtn">分享給朋友測測看</button>
           <button class="btn" id="courseBtn">我想了解 Helori 調香課程</button>
           <a class="btn ghost" href="https://www.hanascent.com/" target="_blank" rel="noopener">前往官網</a>
@@ -160,16 +160,15 @@ function currentImageUrl(){
 
 function resultMessage(intent='result'){
   if(!currentProfile) return '';
+
   if(intent === 'course'){
     return `我想了解 Helori 調香課程。
 我的 Helori 是：${currentProfile.type}
 Origin：${currentProfile.origin}
 香氣方向：${currentProfile.scent}`;
   }
-  return `我想索取完整 Helori 結果。
-我的 Helori 是：${currentProfile.type}
-Origin：${currentProfile.origin}
-香氣方向：${currentProfile.scent}`;
+
+  return `查看${currentProfile.type}的完整檔案`;
 }
 
 function oaMessageUrl(text){
@@ -178,33 +177,8 @@ function oaMessageUrl(text){
 
 async function sendToLine(intent='result'){
   const text=resultMessage(intent);
-  const imageUrl=currentImageUrl();
-
   if(!text){toast('請先完成測驗');return}
-
-  try{
-    if(window.liff&&liffReady&&liff.isInClient()){
-      const messages=[];
-      if(imageUrl){
-        messages.push({
-          type:'image',
-          originalContentUrl:imageUrl,
-          previewImageUrl:imageUrl
-        });
-      }
-      messages.push({type:'text',text});
-      await liff.sendMessages(messages);
-      toast('已送出圖片與結果，請回到 LINE 聊天室查看');
-      setTimeout(()=>{try{liff.closeWindow()}catch(e){}},700);
-      return;
-    }
-
-    location.href=oaMessageUrl(text + (imageUrl ? `\n${imageUrl}` : ''));
-  }catch(e){
-    console.warn(e);
-    toast('無法直接送回官方 LINE，改開官方帳號');
-    setTimeout(()=>location.href=oaMessageUrl(text + (imageUrl ? `\n${imageUrl}` : '')),600);
-  }
+  location.href=oaMessageUrl(text);
 }
 
 async function shareQuiz(){
