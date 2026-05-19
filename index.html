@@ -73,7 +73,7 @@
         <p class="scent-line" id="scentLine"></p>
         <p class="desc" id="resDesc"></p>
         <div class="actions">
-          <button class="btn primary" id="sendResultBtn" type="button">回官方 LINE 查看完整檔案</button>
+          <button class="btn primary" id="sendResultBtn" type="button">到官方 LINE 查看完整檔案</button>
           <button class="btn" id="shareBtn">分享給朋友測測看</button>
           <button class="btn" id="courseBtn">我想了解 Helori 調香課程</button>
           <a class="btn ghost" href="https://www.hanascent.com/" target="_blank" rel="noopener">前往官網</a>
@@ -172,13 +172,24 @@ Origin：${currentProfile.origin}
 }
 
 function oaMessageUrl(text){
-  return `https://line.me/R/oaMessage/${encodeURIComponent(LINE_OA_ID)}/?${encodeURIComponent(text)}`;
+  return `https://line.me/R/oaMessage/@hscent/?${encodeURIComponent(text)}`;
 }
 
 async function sendToLine(intent='result'){
   const text=resultMessage(intent);
   if(!text){toast('請先完成測驗');return}
-  location.href=oaMessageUrl(text);
+  const url=oaMessageUrl(text);
+
+  try{
+    if(window.liff&&liffReady&&liff.isInClient()){
+      liff.openWindow({url:url, external:true});
+      return;
+    }
+  }catch(e){
+    console.warn(e);
+  }
+
+  window.location.href=url;
 }
 
 async function shareQuiz(){
