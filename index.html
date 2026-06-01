@@ -31,7 +31,6 @@
 <body>
   <div class="shell">
     <div class="brand"><strong>Hana's Scent Artist</strong><span>H.FUGUE ATELIER</span></div>
-
     <section id="landing" class="screen active">
       <div class="eyebrow">Keylume · Helori Origin Atlas</div>
       <h1>Find Your<br><em>Helori</em></h1>
@@ -41,12 +40,10 @@
       <div class="pills"><span class="pill">10 個場景選擇</span><span class="pill">LINE 索取完整結果</span><span class="pill">可分享給朋友</span></div>
       <button class="btn primary big" id="startBtn">Find Your Helori</button>
     </section>
-
     <section id="quiz" class="screen">
       <div class="progress"><div class="bar"><span id="barFill"></span></div><div class="counter" id="counter">01 / 10</div></div>
       <div class="card" id="questionCard"></div>
     </section>
-
     <section id="result" class="screen">
       <div class="eyebrow">Your Helori Is …</div>
       <div class="result-card">
@@ -57,7 +54,8 @@
         <p class="scent-line" id="scentLine"></p>
         <p class="desc" id="resDesc"></p>
         <div class="actions">
-          <button class="btn primary" id="sendResultBtn" type="button">到官方 LINE 查看完整檔案</button>
+          <button class="btn primary" id="sendResultBtn" type="button">到官方 LINE 看完整介紹</button>
+          <button class="btn" id="discountBtn" type="button">領取優惠</button>
           <button class="btn" id="shareBtn" type="button">分享給朋友測測看</button>
           <a class="btn" id="courseBtn" href="http://helori.hanascent.com" target="_blank" rel="noopener">我想了解 Helori 課程</a>
           <a class="btn ghost" href="https://www.hanascent.com/" target="_blank" rel="noopener">前往官網</a>
@@ -68,11 +66,11 @@
     </section>
   </div>
   <div class="toast" id="toast"></div>
-
 <script>
 const LIFF_ID='2010125170-LLEvROMg';
 const LIFF_URL='https://liff.line.me/2010125170-LLEvROMg';
 const SHARE_URL='https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(LIFF_URL);
+const LINE_ID='199ywnfo';
 let liffReady=false,currentProfile=null,currentKey=null;
 const BASE='https://h-s017.github.io/heloribyhana/';
 const imgs={A:BASE+'assets/avatars/misti.jpg',B:BASE+'assets/avatars/flori.jpg',C:BASE+'assets/avatars/velmo.jpg',D:BASE+'assets/avatars/ambra.jpg',E:BASE+'assets/avatars/nocta.jpg',F:BASE+'assets/avatars/tealu.jpg',G:BASE+'assets/avatars/mossi.jpg'};
@@ -109,13 +107,14 @@ function renderQuestion(){const q=questions[qIndex],selected=answers[qIndex];$('
 function selectOption(i){answers[qIndex]={i,codes:questions[qIndex].opts[i][2]};renderQuestion();setTimeout(()=>{if(qIndex<questions.length-1){qIndex++;renderQuestion()}else{showResult()}},220)}
 function calculate(){scores={A:0,B:0,C:0,D:0,E:0,F:0,G:0};answers.forEach(a=>{if(a)a.codes.forEach(k=>scores[k]++)});return order.reduce((best,k)=>scores[k]>scores[best]?k:best,'A')}
 function showResult(){if(answers.some(a=>!a)){toast('還有題目未完成');return}const key=calculate(),p=profiles[key];currentProfile=p;currentKey=key;$('#barFill').style.width='100%';$('#resImg').src=imgs[key];$('#atlasNo').textContent='Atlas No. 0'+(order.indexOf(key)+1);$('#resName').textContent=p.type;$('#resEn').textContent=p.en;$('#scentLine').textContent='香氣方向｜'+p.scent;$('#resDesc').textContent=p.desc;show('result')}
-function resultMessage(){if(!currentProfile)return '';return `查看${currentProfile.type}的完整檔案`}
-function oaMessageUrl(text){return `https://line.me/R/oaMessage/@hscent/?${encodeURIComponent(text)}`}
-async function sendToLine(){const text=resultMessage();if(!text){toast('請先完成測驗');return}const url=oaMessageUrl(text);try{if(window.liff&&liffReady&&liff.isInClient()){liff.openWindow({url:url,external:true});return}}catch(e){console.warn(e)}window.location.href=url}
+function lineMessageUrl(text){return 'https://line.me/R/oaMessage/@'+LINE_ID+'/?'+encodeURIComponent(text)}
+function resultText(intent){if(!currentProfile)return '';if(intent==='discount')return `領取優惠\n我的 Helori 是：${currentProfile.type}`;return `我的 Helori 是：${currentProfile.type}`}
+async function openOfficialLine(intent){const text=resultText(intent);if(!text){toast('請先完成測驗');return}const url=lineMessageUrl(text);try{if(window.liff&&liffReady&&liff.isInClient()){liff.openWindow({url:url,external:true});return}}catch(e){console.warn(e)}window.location.href=url}
 async function shareQuiz(){try{if(window.liff&&liffReady&&liff.isInClient()&&liff.isApiAvailable('shareTargetPicker')){await liff.shareTargetPicker([{type:'text',text:`我剛剛完成 Find Your Helori 測驗。\n來看看你的氣味角色是哪一位：\n${LIFF_URL}`}]);toast('已開啟分享');return}}catch(e){console.warn(e)}window.location.href=SHARE_URL}
 async function initLiff(){try{if(window.liff){await liff.init({liffId:LIFF_ID});liffReady=true}}catch(e){console.warn('LIFF init failed',e)}}
 $('#startBtn').addEventListener('click',startQuiz);
-$('#sendResultBtn').addEventListener('click',sendToLine);
+$('#sendResultBtn').addEventListener('click',()=>openOfficialLine('intro'));
+$('#discountBtn').addEventListener('click',()=>openOfficialLine('discount'));
 $('#shareBtn').addEventListener('click',shareQuiz);
 $('#resetBtn').addEventListener('click',()=>{answers=new Array(questions.length).fill(null);scores={A:0,B:0,C:0,D:0,E:0,F:0,G:0};currentProfile=null;currentKey=null;show('landing')});
 buildLanding();initLiff();
