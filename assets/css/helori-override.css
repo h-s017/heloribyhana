@@ -83,17 +83,25 @@ body::after{
 }
 
 .constellation .mini{
-  background:#ffffff!important;
-  border:1px solid #dcdcdc!important;
+  background:transparent!important;
+  border:0!important;
   box-shadow:none!important;
   color:#111111!important;
+  padding:0!important;
 }
 
 .constellation .mini span{
   color:#111111!important;
 }
 
-.avatar,
+.avatar{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  border-radius:0!important;
+  overflow:visible!important;
+}
+
 .portrait{
   background:#ffffff!important;
   border:1px solid #dcdcdc!important;
@@ -103,6 +111,11 @@ body::after{
 .avatar img,
 .portrait img{
   filter:none!important;
+}
+
+.avatar img{
+  object-fit:contain!important;
+  border-radius:0!important;
 }
 
 .card,
