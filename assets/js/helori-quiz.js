@@ -201,7 +201,7 @@ function lineMessageUrl(text){
 
 function resultText(intent){
   if(!currentProfile) return '';
-  if(intent==='discount') return `領取優惠\n我的 Helori 是：${currentProfile.type}`;
+  if(intent==='discount') return '領取優惠';
   return `我的 Helori 是：${currentProfile.type}`;
 }
 
@@ -239,7 +239,9 @@ async function openOfficialLine(intent){
 async function shareQuiz(){
   try{
     if(window.liff&&liffReady&&liff.isInClient()&&liff.isApiAvailable('shareTargetPicker')){
-      await liff.shareTargetPicker([{type:'text',text:`我剛剛完成 Find Your Helori 測驗。\n來看看你的氣味角色是哪一位：\n${LIFF_URL}`}]);
+      await liff.shareTargetPicker([{type:'text',text:`我剛剛完成 Find Your Helori 測驗。
+來看看你的氣味角色是哪一位：
+${LIFF_URL}`}]);
       toast('已開啟分享');
       return;
     }
