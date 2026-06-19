@@ -62,6 +62,13 @@
   </section>
 </div>
 <div class="toast" id="toast"></div>
-<script src="assets/js/helori-quiz.js?v=20260612"></script>
+<script src="assets/js/helori-quiz.js?v=20260619-line-result"></script>
+<script>
+resultText=function(intent){
+  if(!currentProfile) return '';
+  if(intent==='discount') return '領取優惠';
+  return currentProfile.type||'';
+};
+</script>
 </body>
 </html>
