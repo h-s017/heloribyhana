@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Find Your Helori｜課程說明會專屬測驗</title>
+<meta name="description" content="完成 Find Your Helori 測驗，留下課程學習方向後揭曉你的專屬 Helori。" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Noto+Serif+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/helori-theme.css?v=20260612-2" />
+<link rel="stylesheet" href="../assets/css/helori-override.css?v=20260616-white" />
+<link rel="stylesheet" href="../assets/css/helori-course-lead.css?v=20260716-1" />
+<style>
+.brand strong{display:flex;align-items:center;gap:.9em;flex-wrap:wrap}
+.brand-en{font-family:"Cormorant Garamond",serif;font-weight:500;letter-spacing:.24em;white-space:nowrap;text-transform:uppercase}
+.brand-zh{font-family:"Noto Serif TC","PingFang TC",serif;font-weight:400;letter-spacing:.18em;font-size:12px;white-space:nowrap}
+#landing h1{font-family:"Cormorant Garamond",serif;font-weight:500;letter-spacing:.045em;color:#111111;text-shadow:none}
+#landing h1 em{font-weight:500}
+@media(max-width:760px){.brand strong{gap:.45em}.brand-zh{font-size:10px;letter-spacing:.12em}#landing h1{font-weight:500}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="brand"><strong><span class="brand-en">HANA SCENT ARTIST</span><span class="brand-zh">此域 Hineni 氣味敘事空間</span></strong><span>H.FUGUE ATELIER</span></div>
+
+  <section id="landing" class="screen active">
+    <div class="eyebrow">COURSE BRIEFING FOLLOW-UP</div>
+    <h1>Find Your<br><em>Helori</em></h1>
+    <div class="subtitle">課程說明會後，找到專屬你的氣味陪伴者</div>
+    <p class="lead">完成 10 道氣味與美感題目後，留下姓名、Email 與想學習的課程方向，送出即可揭曉你的 Helori。</p>
+    <div class="constellation" id="constellation"></div>
+    <div class="pills">
+      <button class="btn primary" id="startBtn" type="button">開始尋找我的 Helori</button>
+      <a class="btn" href="https://www.instagram.com/hanas.scent/" target="_blank" rel="noopener">FOLLOW INSTAGRAM</a>
+    </div>
+    <p class="microcopy">本頁供完成課程說明會的學員使用。填寫資料僅用於測驗結果與後續課程聯繫。</p>
+  </section>
+
+  <section id="quiz" class="screen">
+    <div class="progress"><div class="bar"><span id="barFill"></span></div><div class="counter" id="counter">01 / 10</div></div>
+    <div class="card" id="questionCard"></div>
+  </section>
+
+  <section id="lead" class="screen">
+    <div class="eyebrow">YOUR ANSWER IS READY</div>
+    <div class="card lead-card">
+      <div class="lead-step">最後一步</div>
+      <h2>留下資訊，揭曉你的 Helori</h2>
+      <p class="lead-intro">你的測驗答案已完成。請選擇最想進一步學習的方向，Hana 老師將依你的需求提供後續課程資訊。</p>
+
+      <form id="leadForm" novalidate>
+        <div class="field-grid">
+          <label class="field">
+            <span>姓名 <b aria-hidden="true">*</b></span>
+            <input id="leadName" name="name" type="text" maxlength="80" autocomplete="name" required placeholder="請輸入姓名" />
+          </label>
+          <label class="field">
+            <span>Email <b aria-hidden="true">*</b></span>
+            <input id="leadEmail" name="email" type="email" maxlength="254" autocomplete="email" required placeholder="name@example.com" />
+          </label>
+        </div>
+
+        <fieldset class="interest-fieldset">
+          <legend>上完課程說明會後，你最想進一步學習哪一個方向？ <b aria-hidden="true">*</b></legend>
+          <label class="interest-option">
+            <input type="radio" name="courseInterest" value="HELORI 體驗課" required />
+            <span><strong>HELORI 體驗課</strong><small>用角色與 18 種氣味，完成一支屬於自己的敘事香氣。</small></span>
+          </label>
+          <label class="interest-option">
+            <input type="radio" name="courseInterest" value="氣味藝術序曲｜專業調香師系列" required />
+            <span><strong>氣味藝術序曲｜專業調香師系列</strong><small>從嗅覺語言、香氣結構到創作概念，建立專業調香基礎。</small></span>
+          </label>
+          <label class="interest-option">
+            <input type="radio" name="courseInterest" value="KPIA 大韓專業調香師證書" required />
+            <span><strong>KPIA 大韓專業調香師證書</strong><small>以系統化理論、配方實作與證書路線完成完整訓練。</small></span>
+          </label>
+        </fieldset>
+
+        <label class="consent-row">
+          <input id="leadConsent" type="checkbox" required />
+          <span>我同意 HANA SCENT ARTIST 使用上述資料提供本次測驗結果、課程資訊與聯繫，不公開我的個人資料。</span>
+        </label>
+
+        <div class="form-message" id="formMessage" role="alert" aria-live="polite"></div>
+        <div class="nav form-nav">
+          <button class="btn" id="backToQuizBtn" type="button">返回上一題</button>
+          <button class="btn primary" id="submitLeadBtn" type="submit">送出並查看答案</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section id="result" class="screen">
+    <div class="eyebrow">Your Helori Is …</div>
+    <div class="result-card">
+      <div class="portrait"><img id="resImg" alt="Helori result"></div>
+      <span class="badge" id="atlasNo"></span>
+      <div class="res-name" id="resName"></div>
+      <div class="res-en" id="resEn"></div>
+      <p class="scent-line" id="scentLine"></p>
+      <p class="desc" id="resDesc"></p>
+
+      <div class="reward-panel">
+        <div class="reward-kicker">STORY REWARD</div>
+        <h2>分享你的 Helori，領取一支織品噴霧</h2>
+        <ol>
+          <li>追蹤 Instagram <strong>@hanas.scent</strong></li>
+          <li>將你的 Helori 結果圖分享至 Instagram 限時動態</li>
+          <li>向現場工作人員出示限動，或傳送截圖至官方 LINE 完成確認</li>
+        </ol>
+        <p>完成追蹤與限時動態分享後，可領取一支織品噴霧。</p>
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" id="storyBtn" type="button">分享／下載限動結果圖</button>
+        <a class="btn" href="https://www.instagram.com/hanas.scent/" target="_blank" rel="noopener">前往 Instagram 追蹤</a>
+        <button class="btn" id="claimBtn" type="button">到 LINE 傳送截圖並領取</button>
+        <a class="btn" id="courseBtn" href="https://www.hanascent.com/" target="_blank" rel="noopener">查看我選擇的課程</a>
+        <button class="btn ghost" id="resetBtn" type="button">重新測驗</button>
+      </div>
+    </div>
+    <div class="footer-brand">H.FUGUE ATELIER｜A scent atelier by Hana</div>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../assets/js/helori-course-lead.js?v=20260716-1"></script>
+<script src="../assets/js/helori-analytics.js?v=20260621-funnel"></script>
+</body>
+</html>
