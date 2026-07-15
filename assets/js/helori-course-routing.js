@@ -13,29 +13,6 @@
     button.textContent = '查看課程';
   }
 
-  function activateScreen(id) {
-    document.querySelectorAll('.screen').forEach(screen => {
-      const active = screen.id === id;
-      screen.classList.toggle('active', active);
-      screen.style.display = active ? (id === 'landing' ? 'flex' : 'block') : 'none';
-    });
-
-    window.scrollTo(0, 0);
-  }
-
-  function startQuizFallback(event) {
-    if (event) event.preventDefault();
-
-    try {
-      if (typeof resetState === 'function') resetState();
-      if (typeof renderQuestion === 'function') renderQuestion();
-    } catch (error) {
-      console.warn('[Helori start fallback]', error);
-    }
-
-    activateScreen('quiz');
-  }
-
   function currentHeloriName() {
     try {
       if (typeof currentKey === 'string' && typeof names === 'object' && names[currentKey]) {
@@ -66,11 +43,9 @@
   }
 
   function installHandlers() {
-    const startButton = $('#startBtn');
-    if (startButton) {
-      startButton.addEventListener('click', startQuizFallback);
-      startButton.addEventListener('touchend', startQuizFallback, { passive: false });
-    }
+    document.querySelectorAll('.screen').forEach(screen => {
+      screen.style.removeProperty('display');
+    });
 
     const claimButton = $('#claimBtn');
     if (claimButton) {
